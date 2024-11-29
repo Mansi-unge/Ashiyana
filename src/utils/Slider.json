@@ -1,0 +1,44 @@
+[
+  {
+    "name" : "Vasant Villa",
+    "address" : "Vasant Nagar, Andheri West, Mumbai, Maharashtra - 400053",
+    "price" : "₹1,50,00,000",
+    "detail" : "3 BHK, 1200 sq. ft., Fully furnished, with a beautiful view of the city skyline.",
+    "image" : "/villa.jpeg"
+  },
+  {
+    "name" : "Royal Enclave",
+    "address" : "Mulund West, Mumbai, Maharashtra - 400080",
+    "price" : "₹1,75,00,000",
+    "detail" : "4 BHK, 1500 sq. ft., Elegant interiors with city views",
+    "image" : "/Royalenclave.jpeg"
+  },
+  {
+    "name" : " Shiv Residency",
+    "address" : "Wakad, Pune, Maharashtra - 411057",
+    "price" : "₹80,00,000",
+    "detail" : "2 BHK, 900 sq. ft., Modern design with easy access to the highway.",
+    "image" : "/residency1.png"
+  },
+  {
+    "name" : "Mango Meadows",
+    "address" : " Alibaug, Maharashtra - 402201",
+    "price" : "₹1,20,00,000",
+    "detail" : "5 BHK, 2500 sq. ft., Large garden, and spacious rooms perfect for family living.",
+    "image" : "/Mangomeadows.png"
+  },
+  {
+    "name" : " Urban Oasis",
+    "address" : "Kalyani Nagar, Pune, Maharashtra - 411006",
+    "price" : "₹95,00,000",
+    "detail" : "3 BHK, 1100 sq. ft., Newly renovated with smart home technology.",
+    "image" : "/urbanoasis.jpg"
+  },
+  {
+    "name" : " Lavish Residency",
+    "address" : "Dadar East, Mumbai, Maharashtra - 400014",
+    "price" : " ₹3,50,00,000",
+    "detail" : " 5 BHK, 2500 sq. ft., Luxurious design with a private swimming pool.",
+    "image" : "/recidency2.png"
+  }
+]
