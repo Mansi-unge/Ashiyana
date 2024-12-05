@@ -1,57 +1,48 @@
 import React from "react";
-// import HeroImage from "../../Hero.jpg";
-import { IoLocation } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";
+import Searchbar from "./Searchbar";
 
 const Hero = () => {
   return (
     <section
-      className="flex items-end flex-col h-[90vh] w-full bg-cover bg-center pt-12"
+      className="flex flex-col justify-center items-end h-[90vh] w-full bg-cover bg-center px-6 sm:px-12"
       style={{ backgroundImage: `url('/Hero.jpg')` }}
-
     >
-      <div className="w-full md:w-[60vw] lg:w-[50vw] text-left p-4 space-y-10">
-        <div>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-semibold">
-            Let's Hunt For Your Dream Residence
-          </h1>
-          <p className="text-lg md:text-xl lg:text-2xl drop-shadow-sm">
-            Explore our range of beautiful properties with the addition of
-            separate accommodation suitable for you
+      {/* Text Content */}
+      <div className="w-full md:w-[60%] lg:w-[50%] space-y-6 text-left">
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight">
+          Let's Hunt For Your Dream Residence
+        </h1>
+        <p className="text-lg md:text-xl lg:text-2xl">
+          Explore our range of beautiful properties with the addition of 
+          separate accommodation suitable for you.
+        </p>
+      </div>
+
+      {/* Searchbar */}
+      <div className="mt-8 w-full flex justify-end lg:me-36 ">
+        <Searchbar />
+      </div>
+
+      {/* Statistics Section */}
+      <div className="flex flex-wrap justify-between gap-6 mt-8 w-full md:w-[60%] lg:w-[50%] bg-black/50 p-4 rounded-lg text-white ml-auto">
+        <div className="text-center">
+          <p className="flex justify-center items-center text-2xl md:text-4xl font-bold">
+            9000 <IoMdAdd color="orange" />
           </p>
+          <p className="text-sm md:text-lg">Premium Products</p>
         </div>
-
-        <div className="w-full sm:w-[70%] md:w-[50%] lg:w-[20vw] shadow-black shadow-2xl ms-0 sm:ms-[15%] md:ms-[25%] py-2 px-4 flex bg-white">
-
-          <input
-            type="search"
-            className="border-none outline-none flex-grow text-sm md:text-base"
-            placeholder="Search here"
-          />
-          <button className="text-white bg-blue-600 px-2 rounded-sm text-sm md:text-base">
-            Search
-          </button>
+        <div className="text-center">
+          <p className="flex justify-center items-center text-2xl md:text-4xl font-bold">
+            2000 <IoMdAdd color="orange" />
+          </p>
+          <p className="text-sm md:text-lg">Happy Customers</p>
         </div>
-
-        <div className="w-full sm:w-[90%] md:w-[70%] lg:w-[40vw] flex flex-col sm:flex-row gap-4 sm:gap-8 ms-0 sm:ms-[5%] bg-black/50 p-4 items-center justify-between text-white">
-          <div className="text-center">
-            <p className="flex justify-center items-center text-2xl md:text-4xl font-semibold">
-              9000 <IoMdAdd color="orange" />
-            </p>
-            <p className="text-sm md:text-xl font-semibold">Premium Product</p>
-          </div>
-          <div className="text-center">
-            <p className="flex justify-center items-center text-2xl md:text-4xl font-semibold">
-              2000 <IoMdAdd color="orange" />
-            </p>
-            <p className="text-sm md:text-xl font-semibold">Happy Customers</p>
-          </div>
-          <div className="text-center">
-            <p className="flex justify-center items-center text-2xl md:text-4xl font-extrabold">
-              29 <IoMdAdd color="orange" />
-            </p>
-            <p className="text-sm md:text-xl font-semibold">Awards Winning</p>
-          </div>
+        <div className="text-center">
+          <p className="flex justify-center items-center text-2xl md:text-4xl font-bold">
+            29 <IoMdAdd color="orange" />
+          </p>
+          <p className="text-sm md:text-lg">Awards Winning</p>
         </div>
       </div>
     </section>
