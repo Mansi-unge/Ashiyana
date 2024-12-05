@@ -8,11 +8,11 @@ export const api = axios.create({
 
 export const getAllProperties = async() =>{
   try {
-    const response = await axios.get("/Residency/allresidencies" ,{
+    const response = await axios.get("/residency/allresidencies" ,{
       timeout: 10 * 1000,
     });
 
-    if(response.status === 400 || response.status === 500 ){
+    if(response .status === 400 || response.status === 500 ){
       throw response.data
     }
     return response.data 

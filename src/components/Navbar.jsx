@@ -4,10 +4,11 @@ import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Manage toggle menu state
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
+      setIsScrolled(window.scrollY > 0); // Change navbar color on scroll
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -16,48 +17,60 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`sticky top-0 z-10 p-2 flex items-center justify-evenly shadow-md transition-colors duration-300 ${
+      className={`sticky top-0 z-10 px-2  flex items-center justify-between md:justify-evenly shadow-md transition-colors duration-300 ${
         isScrolled ? "bg-[#1a2d62]" : "bg-white"
       }`}
     >
-      <Link to="/" >
-      <img
+      {/* Logo */}
+      <Link to="/">
+        <img
           src={isScrolled ? "/footer logo.png" : "/Ashiyana.png"}
           alt="Logo"
           className="w-[200px] transition-all duration-300"
-        /></Link>
+        />
+      </Link>
+
+      {/* Hamburger Menu Button (Visible on smaller screens) */}
+      <div className="md:hidden flex items-center">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`text-3xl ${isScrolled ? "text-white" : "text-black"}`}
+        >
+          &#9776;
+        </button>
+      </div>
+
+      {/* Navigation Links (Responsive) */}
       <div
-        className={`flex items-center gap-8 text-xl font-semibold ${
-          isScrolled ? "text-white" : "text-black"
-        }`}
+        className={`${
+          isOpen
+            ? "flex flex-col gap-4 absolute top-full left-0 right-0 bg-[#1a2d62] shadow-md p-4"
+            : "hidden"
+        } md:flex items-right gap-8 text-xl font-semibold transition-all duration-300`}
       >
-        <NavLink to="/properties" > Properties </NavLink>
-        <a href="mailto:mansiunge842@gmail.com" className="hover:underline"  >
+        <NavLink
+          to="/properties"
+          className={`${
+            isScrolled ? "text-white" : "text-black"
+          } hover:underline`}
+        >
+          Properties
+        </NavLink>
+        <a
+          href="mailto:mansiunge842@gmail.com"
+          className={`${
+            isScrolled ? "text-white" : "text-black"
+          } hover:underline`}
+        >
           Contact Us
         </a>
-        <button>Login</button>
-        {/* <a href="#" className="hover:underline">
-          Residencies
-        </a>
-        <a href="#" className="hover:underline">
-          Our Value
-        </a>
-        
-        <a href="#" className="hover:underline">
-          Get Started
-        </a> */}
-        {/* <button>
-          <a
-            href="#"
-            className={`p-2 rounded-lg ${
-              isScrolled
-                ? "bg-white text-[#1a2d62] hover:bg-gray-200"
-                : "bg-blue-600 text-white hover:bg-blue-800"
-            }`}
-          >
-            Contact
-          </a>
-        </button> */}
+        <button
+          className={`${
+            isScrolled ? "text-white" : "text-black"
+          } hover:underline`}
+        >
+          Login
+        </button>
       </div>
     </nav>
   );
