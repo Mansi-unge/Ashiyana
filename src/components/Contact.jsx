@@ -3,7 +3,7 @@ import { FaPhoneAlt, FaCommentDots, FaVideo, FaComment } from "react-icons/fa";
 
 const Contact = () => {
   return (
-    <section className="mx-[10%] py-10">
+    <section className="mx-[10%] py-10 mt-8">
       <div className="text-center space-y-2">
         <h1 className="text-orange-400 font-bold text-3xl">Our Contact</h1>
         <h1 className="text-black font-bold text-5xl">Easy to contact us</h1>
