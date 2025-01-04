@@ -43,7 +43,7 @@ function App() {
                 <Route path="/" element={<Website />} />
                 <Route path="/Properties">
                     <Route index element={<Properties />} />
-                    <Route path=":propertyid" element={<IndividualProperty />} />
+                    <Route path=":id" element={<IndividualProperty />} />
                   </Route>
                   <Route path="/add-property" element={<AddProperty />} />
               </Route>

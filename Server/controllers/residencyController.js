@@ -1,6 +1,7 @@
 // controllers/residencyController.js
 import Residency from "../models/Residency.js";
 import asyncHandler from "express-async-handler";
+import mongoose from "mongoose";
 
 export const createResidency = asyncHandler(async (req, res) => {
   try {
@@ -48,16 +49,24 @@ export const getAllResidencies = asyncHandler(async (req, res) => {
   }
 });
 
-export const getResidency = asyncHandler(async (req, res) => {
+export const getResidency = async (req, res) => {
   try {
-    const residency = await Residency.findById(req.params.id);
+    const { id } = req.params;
 
-    if (!residency) {
-      return res.status(404).json({ error: "Residency not found" });
+    // Validate ID
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid or missing residency ID' });
     }
 
-    res.json(residency);
+    // Query the database
+    const residency = await Residency.findById(id);
+    if (!residency) {
+      return res.status(404).json({ message: 'Residency not found' });
+    }
+
+    res.status(200).json(residency);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
-});
+};

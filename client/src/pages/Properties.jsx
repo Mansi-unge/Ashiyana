@@ -56,11 +56,11 @@ const Properties = () => {
   return (
     <div className="p-4 flex items-center flex-col gap-4">
       <Searchbar />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full max-w-7xl">
-        {shuffledData.map((card) => (
-          <PropertyCard card={card} key={card.id} />
-        ))}
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+      {properties.map((property) => (
+        <PropertyCard key={property._id} card={property} />
+      ))}
+    </div>
     </div>
   );
 };
