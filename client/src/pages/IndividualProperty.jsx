@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Map from "../components/Map"; // Assuming you have a Map component
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaBed, FaBath, FaCar } from "react-icons/fa"; // Added icons for facilities
 import { HiArrowLeft } from "react-icons/hi";
 
 const IndividualProperty = () => {
@@ -83,37 +83,55 @@ const IndividualProperty = () => {
           <div className="mt-6 flex-1">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Facilities</h2>
             <div className="grid grid-cols-2 gap-4">
-              {(property.facilities || []).map((facility, index) => (
-                <div
-                  key={index}
-                  className="bg-blue-50 p-4 rounded-lg shadow-md text-center hover:shadow-lg transition"
-                >
-                  <p className="text-gray-700 font-medium capitalize">{facility}</p>
-                </div>
-              ))}
+              {(property.facilities || []).map((facility, index) => {
+                let Icon = null;
+                switch (facility.toLowerCase()) {
+                  case "bedroom":
+                    Icon = FaBed;
+                    break;
+                  case "bathroom":
+                    Icon = FaBath;
+                    break;
+                  case "parking":
+                    Icon = FaCar;
+                    break;
+                  default:
+                    Icon = FaMapMarkerAlt; // Default icon
+                    break;
+                }
+                return (
+                  <div
+                    key={index}
+                    className="bg-blue-50 p-4 rounded-lg shadow-md text-center hover:shadow-lg transition"
+                  >
+                    <p className="text-gray-700 font-medium capitalize">{facility}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
-          <div className="mt-6 flex justify-between items-center">
-            <button className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all duration-300">
-              Book Your Visit
-            </button>
-            <button
-              onClick={() => window.history.back()}
-              className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300 flex items-center"
-            >
-              <HiArrowLeft className="mr-2" /> Go Back
-            </button>
-          </div>
+          <div className="mt-6 flex justify-between">
+  <button className="bg-green-500 text-white w-2/3 px-6 py-3 rounded-lg shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all duration-300 mx-4">
+    <span className="mr-2">📅</span> Book Your Visit Now...!
+  </button>
+  <button
+    onClick={() => window.history.back()}
+    className="bg-gray-200 text-gray-800 w-1/4 px-6 py-3 rounded-lg shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300 flex items-center justify-center me-4"
+  >
+    <HiArrowLeft className="mr-2" /> Go Back
+  </button>
+</div>
+
         </div>
 
         {/* Right Section */}
         <div className="lg:w-1/2 flex-1 flex h-auto">
-            <Map
-              address={property.address}
-              city={property.city}
-              country={property.country}
-            />
-          </div>
+          <Map
+            address={property.address}
+            city={property.city}
+            country={property.country}
+          />
+        </div>
       </div>
     </div>
   );
