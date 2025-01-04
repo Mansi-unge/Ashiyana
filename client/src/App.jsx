@@ -6,7 +6,8 @@ import Layout from "./components/Layout";
 import Properties from "./pages/Properties";
 import IndividualProperty from "./pages/IndividualProperty";
 import AddProperty from "./pages/AddProperty";
-import { QueryClient, QueryClientProvider } from "react-query";  // Import QueryClient and QueryClientProvider
+import Login from "./pages/Login"; // Add your Login component here
+import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,7 +21,7 @@ function App() {
     <MantineProvider withGlobalStyles withNormalizeCSS>
       {/* Wrap the app with QueryClientProvider */}
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter >
+        <BrowserRouter>
           <Suspense
             fallback={
               <div
@@ -42,10 +43,11 @@ function App() {
               <Route element={<Layout />}>
                 <Route path="/" element={<Website />} />
                 <Route path="/Properties">
-                    <Route index element={<Properties />} />
-                    <Route path=":id" element={<IndividualProperty />} />
-                  </Route>
-                  <Route path="/add-property" element={<AddProperty />} />
+                  <Route index element={<Properties />} />
+                  <Route path=":id" element={<IndividualProperty />} />
+                </Route>
+                <Route path="/add-property" element={<AddProperty />} />
+                <Route path="/login" element={<Login />} /> {/* Add the Login route */}
               </Route>
             </Routes>
           </Suspense>

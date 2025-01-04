@@ -166,6 +166,9 @@ export const cancelBookings = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Booking cancelled successfully!" });
 });
 
+
+
+
 // Function to add/remove residencies in favorites list of a user
 export const toFav = asyncHandler(async (req, res) => {
   const { email } = req.body;
