@@ -6,7 +6,12 @@ const UserSchema = new Schema({
   email: { type: String, unique: true, required: true, match: /.+\@.+\..+/ },  // Add regex validation for email
   image: { type: String },
   password: { type: String, required: true },  // Add password field here
-  bookedVisits: { type: [Schema.Types.Mixed], default: [] },
+  bookedVisits: [
+    {
+      id: { type: mongoose.Schema.Types.ObjectId, ref: "Residency" },
+      date: { type: Date, required: true },
+    },
+  ],
   favResidenciesID: { type: [Schema.Types.ObjectId], ref: 'Residency', default: [] },
   ownedResidencies: [{ type: Schema.Types.ObjectId, ref: 'Residency' }],
 });
