@@ -97,18 +97,17 @@ const IndividualProperty = () => {
               </p>
             </div>
 
-           {/* Heart Icon for Favorites */}
-<div
-  className="absolute top-4 right-4 text-white cursor-pointer"
-  onClick={isFavorite ? removeFromFavorites : addToFavorites}
->
-  <IoHeartCircleOutline
-    className={`text-4xl transition-all duration-300 ${
-      isFavorite ? "text-red-700 scale-110 pulse" : "text-gray-300"
-    }`}
-  />
-</div>
-
+            {/* Heart Icon for Favorites */}
+            <div
+              className="absolute top-4 right-4 text-white cursor-pointer"
+              onClick={isFavorite ? removeFromFavorites : addToFavorites}
+            >
+              <IoHeartCircleOutline
+                className={`text-4xl transition-all duration-300 ${
+                  isFavorite ? "text-red-700 scale-110 pulse" : "text-gray-300"
+                }`}
+              />
+            </div>
           </div>
 
           {/* Description */}

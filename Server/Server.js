@@ -5,7 +5,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import { userRoute } from './routes/userRoutes.js';
 import { residencyRoute } from './routes/residencyRoute.js';
-
+import session from "express-session";
 
 
 // Load environment variables
@@ -17,11 +17,22 @@ const PORT = process.env.PORT || 8000;
 // Middleware
 app.use(cors({
   credentials: true,
-  origin: ['http://localhost:5174']
+  origin: ['http://localhost:5173']
 }));
 app.use(express.json());  // Parses incoming JSON requests
 app.use(express.urlencoded({ extended: true }));  // Parses URL-encoded bodies
 app.use(cookieParser());  // To parse cookies if needed
+
+
+app.use(
+  session({
+    secret: "0542342060", // Replace with a secure secret key
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }, // Set secure to true in production with HTTPS
+  })
+);
+
 
 // MongoDB connection
 const DATABASE_URL = process.env.DATABASE_URL ;
