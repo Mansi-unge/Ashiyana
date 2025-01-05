@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 8000;
 // Middleware
 app.use(cors({
   credentials: true,
-  origin: ['http://localhost:5173']
+  origin: ['http://localhost:5174']
 }));
 app.use(express.json());  // Parses incoming JSON requests
 app.use(express.urlencoded({ extended: true }));  // Parses URL-encoded bodies

@@ -52,30 +52,13 @@ export const loginUser = asyncHandler(async (req, res) => {
 
   const accessToken = jwt.sign(
     { userId: user._id },
-    process.env.JWT_SECRET,
-    { expiresIn: '1h' }
+    process.env.JWT_SECRET
   );
 
-  const refreshToken = jwt.sign(
-    { userId: user._id },
-    process.env.JWT_SECRET,
-    { expiresIn: '7d' }
-  );
+  con
 
   res.status(200).json({ accessToken, refreshToken });
 });
-
-// Verify Token Middleware
-export const verifyToken = (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(403).json({ message: "No token provided." });
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) return res.status(403).json({ message: "Failed to authenticate token." });
-    req.userId = decoded.userId;
-    next();
-  });
-};
 
 // Get User by Email
 export const getUserByEmail = asyncHandler(async (req, res) => {
@@ -107,3 +90,4 @@ export const fetchUserData = asyncHandler(async (req, res, next) => {
   req.user = user;
   next();
 });
+

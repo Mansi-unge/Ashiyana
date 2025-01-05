@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
-import Login from "./login"; // Import Login Component
+import Login from "../pages/Login";
 import { FaUserCircle } from "react-icons/fa";
 
 const Navbar = () => {
