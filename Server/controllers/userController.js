@@ -1,200 +1,194 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
+import Residency from '../models/Residency.js';
 
-// Create User
-export const createUser = asyncHandler(async (req, res) => {
-  const { email, name, image, password } = req.body;
 
-  if (!email || !name || !image || !password) {
-    return res.status(400).send({ message: "Missing required fields." });
+
+// Register controller
+export const registerUser = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    // Check if user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: 'User already exists!' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+
+    res.status(201).json({ message: 'Account created successfully!' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Server error' });
   }
+};
 
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    return res.status(400).send({ message: "User already exists." });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = await User.create({
-    email,
-    name,
-    image,
-    password: hashedPassword,
-    bookedVisits: [],
-    favResidenciesID: [],
-  });
-
-  res.status(201).send({ message: "User registered successfully", user });
-});
-
-// Login User
-export const loginUser = asyncHandler(async (req, res) => {
+// Login controller
+export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).send({ message: "Email and password are required." });
+  try {
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'User not found!' });
+    }
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+ // Create the token
+ const token = jwt.sign(
+  { userId: user._id },
+  process.env.JWT_SECRET || "your-secret-key",
+  { expiresIn: "7d" } // Adjust the expiration time as needed
+);
+
+    res.status(200).json({
+      message: 'Login successful!',
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+// Fetch user details from the database
+export const getUserDetails = async (req, res) => {
+  try {
+    console.log("Fetching user details...");
+
+
+  // The `authenticate` middleware ensures the token is valid and adds `req.user`
+  const user = await User.findById(req.user.userId);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    console.log("User fetched from database:", user); 
+
+    res.status(200).json({
+      name: user.name,
+      email: user.email,
+      image: user.image || "/default-avatar.png", // Default image if not provided
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Controller to update profile image
+export const updateProfileImage = asyncHandler(async (req, res) => {
+  const { image } = req.body; // Base64 encoded image
+
+  if (!image) {
+    return res.status(400).json({ message: "No image provided" });
   }
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).send({ message: "User not found." });
+  try {
+    // Fetch the user from the database
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the user's image
+    user.image = image;
+
+    // Save the user with the updated image
+    await user.save();
+
+    res.status(200).json({ message: "Profile image updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error updating profile image" });
   }
+});
 
-  const isPasswordCorrect = await bcrypt.compare(password, user.password);
-  if (!isPasswordCorrect) {
-    return res.status(400).send({ message: "Invalid password." });
+// Controller to remove profile image
+export const removeProfileImage = asyncHandler(async (req, res) => {
+  try {
+    // Fetch the user from the database
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Reset the user's image to default (or remove the image field)
+    user.image = "";  // or null if preferred
+
+    // Save the user with the updated image
+    await user.save();
+
+    res.status(200).json({ message: "Profile image removed successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error removing profile image" });
   }
-
-  // Ensure `req.session` is initialized
-  if (!req.session) {
-    return res.status(500).send({ message: "Session not initialized." });
-  }
-
-  req.session.user = {
-    userId: user._id,
-    email: user.email,
-    name: user.name,
-  };
-
-  res.status(200).json({ message: "Login successful", user: req.session.user });
 });
 
 
-// Get User by Email
-export const getUserByEmail = asyncHandler(async (req, res) => {
-  const { email } = req.query;
-  const user = await User.findOne({ email });
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+export const bookVisit = async (req, res) => {
+  const { residencyId, visitDate } = req.body;
+  const userId = req.user.userId; // Align with JWT payload
+
+
+  try {
+    const residency = await Residency.findById(residencyId);
+    if (!residency) return res.status(404).json({ message: 'Residency not found' });
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.bookedVisits.push({ id: residencyId, date: visitDate });
+    await user.save();
+
+    res.status(200).json({ message: 'Visit booked successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
   }
+};
 
-  res.status(200).json(user);
+
+// Controller to cancel a booked visit
+export const cancelBookedVisit = asyncHandler(async (req, res) => {
+  const { residencyId } = req.body;
+  const userId = req.user.userId;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.bookedVisits = user.bookedVisits.filter(
+      (visit) => visit.id.toString() !== residencyId
+    );
+
+    await user.save();
+
+    res.status(200).json({ message: "Visit cancelled successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 });
 
-
-// Function to book a visit to residency
-export const bookVisit = asyncHandler(async (req, res) => {
-  const { email, date } = req.body;
-  const { id } = req.params;
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
- if (user.bookedVisits.some((visit) => visit.id.toString() === id)) {
-  return res.status(400).json({ message: "This residency is already booked by you" });
-}
-
-
-  user.bookedVisits.push({ id, date });
-  await user.save();
-
-  res.status(200).json({ message: "Your visit is booked successfully!" });
-});
-
-// Function to get all bookings of a user
-export const getAllBookings = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ message: "Email is required" });
-  }
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  res.status(200).json(user.bookedVisits);
-});
-
-// Function to cancel a booking
-export const cancelBookings = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-  const { id } = req.params;
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  const index = user.bookedVisits.findIndex((visit) => visit.id === id);
-
-  if (index === -1) {
-    return res.status(404).json({ message: "Booking not found" });
-  }
-
-  user.bookedVisits.splice(index, 1);
-  await user.save();
-
-  res.status(200).json({ message: "Booking cancelled successfully!" });
-});
-
-// Function to add/remove residencies in favorites list of a user
-export const toFav = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-  const { rid } = req.params;
-
-  if (!rid) {
-    return res.status(400).json({ message: "Invalid residency ID" });
-  }
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  const currentFavorites = user.favResidenciesID || [];
-
-  if (currentFavorites.includes(rid)) {
-    user.favResidenciesID = currentFavorites.filter((favId) => favId !== rid);
-  } else {
-    user.favResidenciesID.push(rid);
-  }
-
-  await user.save();
-
-  res.status(200).json({
-    message: currentFavorites.includes(rid) ? "Removed from favorites" : "Added to favorites",
-    user,
-  });
-});
-
-// Function to get all favorites
-export const getAllFavourites = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  res.status(200).json(user.favResidenciesID);
-});
-
-// Middleware to fetch user data
-export const fetchUserData = asyncHandler(async (req, res, next) => {
-  const { email } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ message: "Email is required." });
-  }
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(404).json({ message: "User not found." });
-  }
-
-  req.user = user;
-  next();
-});

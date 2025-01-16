@@ -1,22 +1,28 @@
-import express from "express";
-import {
-  createUser,
-  getUserByEmail,
-  loginUser,
-  getAllBookings,  getAllFavourites, toFav ,bookVisit, cancelBookings,
-} from "../controllers/userController.js";
+import express from 'express';
+import { registerUser, loginUser , getUserDetails , updateProfileImage , removeProfileImage , bookVisit , cancelBookedVisit } from '../controllers/userController.js';
+import { authenticate } from '../middleware/authMiddleware.js';  
 
 const router = express.Router();
 
-// User routes
-router.post("/create", createUser); // Create User
-router.post("/user/login", loginUser); // Login User
-router.get("/user", getUserByEmail); // Get User Details
-// Other routes for booking and favorites
-router.post("/bookVisit/:id", bookVisit);
-router.post('/getAllBookings', getAllBookings);
-router.post("/removeBookings/:id", cancelBookings);
-router.post("/toFav/:rid", toFav);
-router.post("/AllFavourites", getAllFavourites);
+// Route for registering new user
+router.post('/register', registerUser);
+
+// Route for logging in existing user
+router.post('/login', loginUser);
+
+// Ensure the route matches /api/profile and is protected by authentication
+router.get('/profile', authenticate, getUserDetails);
+
+// Route for updating profile image (protected by authentication)
+router.post('/upload-profile-image', authenticate, updateProfileImage);
+
+
+// Route for removing profile image (protected by authentication)
+router.delete('/remove-profile-image', authenticate, removeProfileImage);
+
+router.post('/book', authenticate, bookVisit);
+
+router.post('/cancel-visit', authenticate, cancelBookedVisit);
+
 
 export { router as userRoute };

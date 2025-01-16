@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Map from "../components/Map"; // Assuming you have a Map component
-import { FaMapMarkerAlt, FaBed, FaBath, FaCar } from "react-icons/fa"; // Keep the other icons
+import Map from "../components/Map";
+import { FaMapMarkerAlt, FaBed, FaBath, FaCar } from "react-icons/fa";
 import { HiArrowLeft } from "react-icons/hi";
 import { IoHeartCircleOutline } from "react-icons/io5";
 
@@ -13,9 +13,10 @@ const IndividualProperty = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [visitDate, setVisitDate] = useState("");
-  const [isVisitBooked, setIsVisitBooked] = useState(false); // New state to track booking
-  const [bookedDate, setBookedDate] = useState(""); // New state to store booked date
-  const [isFavorite, setIsFavorite] = useState(false); // New state for favorites
+  const [isVisitBooked, setIsVisitBooked] = useState(false);
+  const [bookedDate, setBookedDate] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     if (!id) {
@@ -23,11 +24,16 @@ const IndividualProperty = () => {
       return;
     }
 
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      setToken(storedToken);
+    } else {
+      console.warn("No token found in localStorage");
+    }
+
     const fetchPropertyDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8000/api/residencies/${id}`
-        );
+        const response = await axios.get(`http://localhost:8000/api/residencies/${id}`);
         setProperty(response.data);
       } catch (err) {
         setError("Failed to fetch property details");
@@ -39,33 +45,51 @@ const IndividualProperty = () => {
     fetchPropertyDetails();
   }, [id]);
 
-  const addToFavorites = () => {
-    setIsFavorite(true); // Set to true when added to favorites
+  const toggleFavorite = () => {
+    setIsFavorite((prev) => !prev);
   };
 
-  const removeFromFavorites = () => {
-    setIsFavorite(false); // Set to false when removed from favorites
+  const handleBookVisit = async () => {
+    if (!visitDate) {
+      alert("Please select a date for your visit.");
+      return;
+    }
+    try {
+      if (!token) throw new Error("User not logged in.");
+      await axios.post(
+        "http://localhost:8000/api/users/book",
+        { residencyId: id, visitDate },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Visit booked successfully");
+      setIsVisitBooked(true);
+      setBookedDate(visitDate);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error booking visit:", error.response?.data || error.message);
+      alert(`Error booking visit: ${error.response?.data?.message || error.message}`);
+    }
   };
 
-  const handleBookVisit = () => {
-    setBookedDate(visitDate); // Save the booked date
-    setIsVisitBooked(true); // Mark the visit as booked
-    setIsModalOpen(false); // Close the modal after booking
-  };
-
-  const handleCancelVisit = () => {
-    setIsVisitBooked(false); // Reset visit booking
-    setBookedDate(""); // Clear the booked date
+  const handleCancelVisit = async () => {
+    try {
+      if (!token) throw new Error("User not logged in.");
+      await axios.post(
+        "http://localhost:8000/api/users/cancel-visit",
+        { residencyId: id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Visit cancelled successfully");
+      setIsVisitBooked(false);
+      setBookedDate("");
+    } catch (error) {
+      console.error("Error cancelling visit:", error.response?.data || error.message);
+      alert(`Error cancelling visit: ${error.response?.data?.message || error.message}`);
+    }
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        <div className="text-2xl font-semibold text-gray-500">
-          Loading property details...
-        </div>
-      </div>
-    );
+    return <div className="text-2xl text-gray-500">Loading property details...</div>;
   }
 
   if (error) {
@@ -78,163 +102,105 @@ const IndividualProperty = () => {
 
   return (
     <div className="p-6 bg-white shadow-2xl rounded-xl">
-      <div className="flex flex-col lg:flex-row gap-8 items-stretch h-full">
+      <div className="flex flex-col lg:flex-row gap-8">
         {/* Left Section */}
         <div className="lg:w-1/2 flex flex-col">
-          <div className="relative flex-1">
+          <div className="relative">
             <img
               src={property.image || "placeholder.jpg"}
               alt={property.title}
               className="w-full h-[400px] object-cover rounded-xl"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent rounded-xl"></div>
-            <div className="absolute bottom-5 left-5 text-white">
-              <h1 className="text-4xl font-bold">
-                {property.title || "Property Details"}
-              </h1>
-              <p className="text-2xl mt-2 font-semibold text-green-600">
-                &#8377;{property.price || "N/A"}
-              </p>
-            </div>
-
-            {/* Heart Icon for Favorites */}
             <div
-              className="absolute top-4 right-4 text-white cursor-pointer"
-              onClick={isFavorite ? removeFromFavorites : addToFavorites}
+              className="absolute top-4 right-4 cursor-pointer"
+              onClick={toggleFavorite}
             >
               <IoHeartCircleOutline
-                className={`text-4xl transition-all duration-300 ${
-                  isFavorite ? "text-red-700 scale-110 pulse" : "text-gray-300"
-                }`}
+                className={`text-4xl ${
+                  isFavorite ? "text-red-600 scale-110" : "text-gray-300"
+                } transition-transform`}
               />
             </div>
-          </div>
-
-          {/* Description */}
-          <div className="mt-6 flex-1 space-y-6">
-            <div className="p-6 bg-gray-50 rounded-xl shadow-lg">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                Description
-              </h2>
-              <p className="text-gray-700 leading-relaxed">
-                {property.description || "No description available."}
+            <div className="absolute bottom-5 left-5 text-white">
+              <h1 className="text-4xl font-bold">{property.title}</h1>
+              <p className="text-2xl font-semibold text-green-500">
+                &#8377;{property.price}
               </p>
             </div>
-
-            {/* Address */}
-            <div className="p-6 bg-gray-50 rounded-xl shadow-lg">
-              <div className="text-gray-600">
-                <FaMapMarkerAlt className="inline-block text-blue-500 mr-2" />
-                <strong>Address:</strong> {property.address || "N/A"},{" "}
-                {property.city || "N/A"}, {property.country || "N/A"}
-              </div>
-            </div>
           </div>
 
-          {/* Facilities */}
-          <div className="mt-6 flex-1">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              Facilities
-            </h2>
+          <div className="mt-6">
+            <h2 className="text-2xl font-semibold mb-4">Description</h2>
+            <p>{property.description || "No description available."}</p>
+          </div>
+
+          <div className="mt-6">
+            <h2 className="text-2xl font-semibold mb-4">Facilities</h2>
             <div className="grid grid-cols-2 gap-4">
               {(property.facilities || []).map((facility, index) => {
-                let Icon = null;
-                switch (facility.toLowerCase()) {
-                  case "bedroom":
-                    Icon = FaBed;
-                    break;
-                  case "bathroom":
-                    Icon = FaBath;
-                    break;
-                  case "parking":
-                    Icon = FaCar;
-                    break;
-                  default:
-                    Icon = FaMapMarkerAlt; // Default icon
-                    break;
-                }
+                const icons = {
+                  bedroom: FaBed,
+                  bathroom: FaBath,
+                  parking: FaCar,
+                };
+                const Icon = icons[facility.toLowerCase()] || FaMapMarkerAlt;
                 return (
-                  <div
-                    key={index}
-                    className="bg-blue-50 p-4 rounded-lg shadow-md text-center hover:shadow-lg transition"
-                  >
-                    <p className="text-gray-700 font-medium capitalize">
-                      {facility}
-                    </p>
+                  <div key={index} className="flex items-center space-x-2">
+                    <Icon className="text-blue-500" />
+                    <span>{facility}</span>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Booking Visit Button */}
-          <div className="mt-6 flex justify-evenly">
+          <div className="mt-6">
             {!isVisitBooked ? (
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-green-500 text-white w-2/3 px-6 py-3 rounded-lg shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all duration-300 mx-4"
+                className="bg-green-500 text-white px-6 py-3 rounded-lg"
               >
-                Book Your Visit Now!
+                Book Your Visit
               </button>
             ) : (
-              <div className="flex w-2/3 justify-between space-x-4">
-                <button className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all duration-300 w-full">
-                  Your visit is booked for {bookedDate}
+              <div className="flex gap-4">
+                <button className="bg-green-500 text-white px-6 py-3 rounded-lg">
+                  Visit on {bookedDate}
                 </button>
                 <button
                   onClick={handleCancelVisit}
-                  className="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-600 transform hover:scale-105 transition-all duration-300 w-full"
+                  className="bg-red-500 text-white px-6 py-3 rounded-lg"
                 >
                   Cancel Visit
                 </button>
               </div>
             )}
-
-            <button
-              onClick={() => window.history.back()}
-              className="bg-gray-200 text-gray-800 w-1/4 px-6 py-3 rounded-lg shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300 flex items-center justify-center me-4"
-            >
-              <HiArrowLeft className="mr-2" /> Go Back
-            </button>
           </div>
         </div>
 
         {/* Right Section */}
-        <div className="lg:w-1/2 flex-1 flex h-auto">
-          <Map
-            address={property.address}
-            city={property.city}
-            country={property.country}
-          />
+        <div className="lg:w-1/2">
+          <Map address={property.address} city={property.city} country={property.country} />
         </div>
       </div>
 
-      {/* Modal for Booking Visit */}
+      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              Book Your Visit
-            </h2>
-            <label className="block text-gray-700 mb-2">Select a date:</label>
+          <div className="bg-white p-6 rounded-lg">
+            <h2 className="text-xl font-semibold">Select Visit Date</h2>
             <input
               type="date"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-green-500"
               value={visitDate}
               onChange={(e) => setVisitDate(e.target.value)}
+              className="w-full p-2 border rounded-lg mt-4"
             />
-            <div className="mt-6 flex justify-end gap-4">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow hover:bg-gray-300"
-              >
+            <div className="mt-4 flex justify-end gap-2">
+              <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-300 rounded-lg">
                 Cancel
               </button>
-              <button
-                onClick={handleBookVisit}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600"
-              >
-                Book Visit
+              <button onClick={handleBookVisit} className="px-4 py-2 bg-green-500 text-white rounded-lg">
+                Confirm
               </button>
             </div>
           </div>

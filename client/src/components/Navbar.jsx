@@ -2,21 +2,22 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Login from "../pages/Login";
 import { FaUserCircle } from "react-icons/fa";
+import Profile from "./Profile";  // Import Profile component
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoginPageOpen, setIsLoginPageOpen] = useState(false); // For controlling login page visibility
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check if user is logged in
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false); // For controlling profile menu visibility
-  const profileMenuRef = useRef(null); // Reference to the profile menu popup
+  const [isLoginPageOpen, setIsLoginPageOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef(null);
 
   const handleLoginClick = () => {
-    setIsLoginPageOpen(true); // Open the login page when clicked
+    setIsLoginPageOpen(true);
   };
 
   const closeLoginPage = () => {
-    setIsLoginPageOpen(false); // Close the login page
+    setIsLoginPageOpen(false);
   };
 
   const handleScroll = () => {
@@ -24,16 +25,15 @@ const Navbar = () => {
   };
 
   const toggleProfileMenu = () => {
-    setIsProfileMenuOpen(!isProfileMenuOpen); // Toggle profile menu visibility
+    setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Clear the user from local storage
-    setIsLoggedIn(false); // Update login state
-    setIsProfileMenuOpen(false); // Close the profile menu
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+    setIsProfileMenuOpen(false);
   };
 
-  // Close the profile menu if clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
@@ -50,9 +50,8 @@ const Navbar = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
 
-    // Check if the user is logged in
-    const user = localStorage.getItem("user"); // Example: Using localStorage to store login state
-    if (user) {
+    const user = localStorage.getItem("isLoggedIn");
+    if (user === "true") {
       setIsLoggedIn(true);
     }
 
@@ -72,7 +71,6 @@ const Navbar = () => {
       className={`sticky top-0 z-10 w-full shadow-md transition-colors duration-300 p-2 ${isScrolled ? "bg-[#1a2d62]" : "bg-white"}`}
     >
       <div className="max-w-screen-xl mx-auto flex justify-between items-center h-16">
-        {/* Logo */}
         <Link to="/">
           <img
             src={isScrolled ? "/footer logo.png" : "/Ashiyana.png"}
@@ -81,7 +79,6 @@ const Navbar = () => {
           />
         </Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex space-x-8 items-center">
           <NavLink
             to="/properties"
@@ -102,12 +99,9 @@ const Navbar = () => {
             Contact Us
           </a>
           {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 text-white px-2 py-1 border font-semibold text-xl border-red-700 rounded-lg"
-            >
-              Logout
-            </button>
+            <div ref={profileMenuRef}>
+              <Profile handleLogout={handleLogout} />  {/* Show Profile component */}
+            </div>
           ) : (
             <button
               onClick={handleLoginClick}
@@ -118,7 +112,6 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button
             onClick={toggleMobileMenu}
@@ -129,7 +122,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div
           className={`md:hidden text-white p-4 space-y-4 flex flex-col ${isScrolled ? "bg-[#1a2d62]" : "bg-white"}`}
@@ -173,7 +165,6 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Login Modal */}
       {isLoginPageOpen && <Login closeLoginPage={closeLoginPage} setIsLoggedIn={setIsLoggedIn} />}
     </nav>
   );
