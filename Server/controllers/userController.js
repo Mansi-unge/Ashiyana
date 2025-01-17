@@ -201,3 +201,32 @@ export const cancelBookedVisit = asyncHandler(async (req, res) => {
   }
 });
 
+
+// Check if the user has booked the property
+export const checkBookingStatus = async (req, res) => {
+  const { propertyId } = req.params;
+  const userId = req.user.userId;
+
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+
+    const booking = user.bookedVisits.find(
+      (visit) => visit.id.toString() === propertyId
+    );
+   
+    if (booking) {
+      return res.status(200).json({ isBooked: true, visitDate: booking.date });
+    }
+
+
+    res.status(200).json({ isBooked: false });
+  } catch (error) {
+    console.error("Error in checkBookingStatus:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};

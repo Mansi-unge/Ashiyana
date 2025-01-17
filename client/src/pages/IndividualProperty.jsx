@@ -41,8 +41,26 @@ const IndividualProperty = () => {
         setIsLoading(false);
       }
     };
+    const checkBookingStatus = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/users/check-booking/${id}`, {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
+        if (response.data.isBooked) {
+          setIsVisitBooked(true);
+          setBookedDate(response.data.visitDate);
+        }
+      } catch (err) {
+        console.error("Error checking booking status:", err);
+      }
+    };
 
     fetchPropertyDetails();
+
+    if (storedToken) {
+      checkBookingStatus();
+    }
+    
   }, [id]);
 
   const toggleFavorite = () => {
