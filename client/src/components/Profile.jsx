@@ -7,6 +7,7 @@ const Profile = ({ handleLogout }) => {
   const [user, setUser] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [bookedVisits, setBookedVisits] = useState([]);
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -23,6 +24,7 @@ const Profile = ({ handleLogout }) => {
 
         setUser(response.data || {});
         setBookedVisits(response.data.bookedVisits || []);
+        setFavorites(response.data.favResidenciesID || []);
       } catch (error) {
         console.error("Error fetching user details:", error);
       }
@@ -64,7 +66,14 @@ const Profile = ({ handleLogout }) => {
   };
 
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <Avatar
+        src="/default-avatar.png"
+        alt="User"
+        radius="xl"
+        size={40}
+      />
+    );
   }
 
   return (
@@ -99,6 +108,23 @@ const Profile = ({ handleLogout }) => {
             </Badge>
           )}
         </Group>
+        <Divider />
+<Menu.Label>Favorites</Menu.Label>
+{favorites.length > 0 ? (
+  favorites.map((fav) => (
+    <Menu.Item key={fav._id || Math.random()}>
+      <Text weight={500} size="sm">
+        {fav.title || "Unknown Property"}
+      </Text>
+      <Text size="xs" color="gray">
+        Property ID: {fav._id || "Unknown ID"}
+      </Text>
+    </Menu.Item>
+  ))
+) : (
+  <Menu.Item disabled>No favorite properties</Menu.Item>
+)}
+
 
         <Divider />
         <Menu.Label>Booked Visits</Menu.Label>
@@ -122,6 +148,7 @@ const Profile = ({ handleLogout }) => {
         ) : (
           <Menu.Item disabled>No visits booked</Menu.Item>
         )}
+
 
         <Divider />
         <Menu.Label>Settings</Menu.Label>

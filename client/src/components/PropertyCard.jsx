@@ -1,41 +1,101 @@
-import React from "react";
-import { AiFillHeart } from "react-icons/ai";
+import React, { useState, useEffect } from "react";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import truncate from "lodash/truncate";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const PropertyCard = ({ card = {} }) => { 
+const PropertyCard = ({ card = {} }) => {
   const navigate = useNavigate();
+  const [isWishlisted, setIsWishlisted] = useState(false);
+
+  useEffect(() => {
+    const checkIfFavorite = async () => {
+      try {
+        const storedToken = localStorage.getItem("authToken");
+        if (!storedToken) return;
+
+        const response = await axios.get("http://localhost:8000/api/profile", {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
+
+        const favoriteProperties = response.data.favResidenciesID || [];
+        const isFavorited = favoriteProperties.some((fav) => fav._id === card._id);
+        setIsWishlisted(isFavorited);
+      } catch (error) {
+        console.error("Error fetching favorites:", error);
+      }
+    };
+
+    checkIfFavorite();
+  }, [card._id]);
+
+  const toggleWishlist = async (e) => {
+    e.stopPropagation();
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      if (!storedToken) return alert("Please log in to use this feature.");
+
+      const url = isWishlisted
+        ? "http://localhost:8000/api/users/remove-favorite"
+        : "http://localhost:8000/api/users/add-favorite";
+
+      await axios.post(
+        url,
+        { residencyId: card._id },
+        { headers: { Authorization: `Bearer ${storedToken}` } }
+      );
+
+      setIsWishlisted(!isWishlisted);
+      alert(`Property ${isWishlisted ? "removed from" : "added to"} favorites.`);
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+      alert("Error updating favorites.");
+    }
+  };
 
   return (
-    <div 
-      className="w-full sm:w-72 md:w-80 lg:w-96 xl:w-[300px] relative rounded-lg gap-2 m-auto transition-all ease-in-out max-w-xs flex flex-col p-4 hover:scale-105 hover:cursor-pointer hover:bg-gradient-to-b from-[rgba(255,255,255,0)] to-[rgba(136,160,255,0.46)] hover:drop-shadow-xl" 
-      onClick={() => card._id && navigate(`/properties/${card._id}`)} // Navigates to individual property details
+    <div
+      className="w-full sm:w-72 md:w-80 lg:w-96 xl:w-[300px] relative rounded-xl gap-3 m-auto transition-transform ease-in-out max-w-xs flex flex-col p-5 hover:scale-105 hover:cursor-pointer bg-white shadow-md hover:shadow-xl border border-gray-200"
+      onClick={() => card._id && navigate(`/properties/${card._id}`)}
     >
-      <div className="w-full h-44 relative">
+      <div className="w-full h-48 relative rounded-xl overflow-hidden">
         <img
-          src={card.image || "placeholder.jpg"} // Fallback to a placeholder image
+          src={card.image || "placeholder.jpg"}
           alt={card.title || "Property Image"}
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
         />
-        <AiFillHeart
-          size={24}
-          className="text-white absolute top-2 right-4 cursor-pointer"
-        />
+        <div
+          className="absolute top-3 right-3 bg-white p-1 rounded-full shadow-md hover:scale-110 transition-transform duration-300"
+          onClick={toggleWishlist}
+        >
+          {isWishlisted ? (
+            <AiFillHeart size={24} className="text-red-500" />
+          ) : (
+            <AiOutlineHeart size={24} className="text-gray-400" />
+          )}
+        </div>
       </div>
-      <span className="text-xl font-semibold">{card.price || "N/A"}</span>
-      <span className="text-2xl">
+      <div className="absolute top-3 left-3 bg-gradient-to-r from-green-400 to-blue-500 text-white px-3 py-1 text-sm rounded-full shadow-md">
+        ₹{card.price || "N/A"}
+      </div>
+      <h2 className="text-lg font-bold text-gray-800 mt-2">
         {truncate(card.title || "Unnamed Property", {
-          length: 15, // Adjust the character limit as needed
+          length: 20,
           separator: " ",
           omission: "...",
         })}
-      </span>
-      <span className="text-sm w-full md:w-60">
+      </h2>
+      <p className="text-sm text-gray-600">
         {truncate(card.description || "No details available.", {
-          length: 80, // Maximum character limit for description
+          length: 100,
           omission: "...",
         })}
-      </span>
+      </p>
+      <button
+        className="mt-3 py-2 px-4 bg-gradient-to-r from-blue-500 to-green-400 text-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform"
+      >
+        View Details
+      </button>
     </div>
   );
 };

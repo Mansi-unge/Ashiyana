@@ -13,7 +13,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
-
+import SearchResults from "./pages/SearchResults";
 function App() {
   // Create QueryClient instance
   const queryClient = new QueryClient();
@@ -42,6 +42,7 @@ function App() {
             <Routes>
               <Route element={<Layout />}>
                 <Route path="/" element={<Website />} />
+                <Route path="/search-results" element={<SearchResults />} />
                 <Route path="/Properties">
                   <Route index element={<Properties />} />
                   <Route path=":id" element={<IndividualProperty />} />

@@ -5,6 +5,8 @@ import Map from "../components/Map";
 import { FaMapMarkerAlt, FaBed, FaBath, FaCar } from "react-icons/fa";
 import { HiArrowLeft } from "react-icons/hi";
 import { IoHeartCircleOutline } from "react-icons/io5";
+import IndividualSkeleton from "../skeletons/IndividualSkeleton";
+import Failed from "../skeletons/failed";
 
 const IndividualProperty = () => {
   const { id } = useParams();
@@ -60,12 +62,50 @@ const IndividualProperty = () => {
     if (storedToken) {
       checkBookingStatus();
     }
+    const fetchUserFavorites = async () => {
+      try {
+        const storedToken = localStorage.getItem("authToken");
+        if (!storedToken) return;
+  
+        const response = await axios.get("http://localhost:8000/api/profile", {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        });
+  
+        const favoriteProperties = response.data.favResidenciesID || [];
+        const isFavorited = favoriteProperties.some((fav) => fav._id === id);
+        setIsFavorite(isFavorited);
+      } catch (error) {
+        console.error("Error fetching favorites:", error);
+      }
+    };
+  
+    fetchUserFavorites();
     
   }, [id]);
 
-  const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
-  };
+const toggleFavorite = async () => {
+  try {
+    const storedToken = localStorage.getItem("authToken");
+    if (!storedToken) return alert("Please log in to use this feature.");
+
+    const url = isFavorite
+      ? "http://localhost:8000/api/users/remove-favorite"
+      : "http://localhost:8000/api/users/add-favorite";
+
+    await axios.post(
+      url,
+      { residencyId: id },
+      { headers: { Authorization: `Bearer ${storedToken}` } }
+    );
+
+    setIsFavorite(!isFavorite);
+    alert(`Property ${isFavorite ? "removed from" : "added to"} favorites.`);
+  } catch (error) {
+    console.error("Error updating favorites:", error);
+    alert("Error updating favorites.");
+  }
+};
+
 
   const handleBookVisit = async () => {
     if (!visitDate) {
@@ -107,15 +147,19 @@ const IndividualProperty = () => {
   };
 
   if (isLoading) {
-    return <div className="text-2xl text-gray-500">Loading property details...</div>;
+    return <div className="text-2xl text-gray-500">
+      <IndividualSkeleton/>
+    </div>;
   }
 
   if (error) {
-    return <div className="text-red-500 text-xl">{error}</div>;
+    return <div className="text-red-500 text-xl"><Failed/></div>;
   }
 
   if (!property) {
-    return <div className="text-gray-500 text-xl">Property not found.</div>;
+    return <div>
+      <Failed/>
+    </div>
   }
 
   return (
@@ -146,32 +190,60 @@ const IndividualProperty = () => {
               </p>
             </div>
           </div>
+          <div className="mt-6 flex-1 space-y-6">
+          <div className="p-6 bg-gray-50 rounded-xl shadow-lg">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                Description
+              </h2>
+              <p className="text-gray-700 leading-relaxed">
+                {property.description || "No description available."}
+              </p>
+            </div>
 
-          <div className="mt-6">
-            <h2 className="text-2xl font-semibold mb-4">Description</h2>
-            <p>{property.description || "No description available."}</p>
-          </div>
+          <div className="p-6 bg-gray-50 rounded-xl shadow-lg">
+              <div className="text-gray-600">
+                <FaMapMarkerAlt className="inline-block text-blue-500 mr-2" />
+                <strong>Address:</strong> {property.address || "N/A"},{" "}
+                {property.city || "N/A"}, {property.country || "N/A"}
+              </div>
+            </div>
+            </div>
 
-          <div className="mt-6">
-            <h2 className="text-2xl font-semibold mb-4">Facilities</h2>
+           {/* Facilities */}
+           <div className="mt-6 flex-1">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Facilities
+            </h2>
             <div className="grid grid-cols-2 gap-4">
               {(property.facilities || []).map((facility, index) => {
-                const icons = {
-                  bedroom: FaBed,
-                  bathroom: FaBath,
-                  parking: FaCar,
-                };
-                const Icon = icons[facility.toLowerCase()] || FaMapMarkerAlt;
+                let Icon = null;
+                switch (facility.toLowerCase()) {
+                  case "bedroom":
+                    Icon = FaBed;
+                    break;
+                  case "bathroom":
+                    Icon = FaBath;
+                    break;
+                  case "parking":
+                    Icon = FaCar;
+                    break;
+                  default:
+                    Icon = FaMapMarkerAlt; // Default icon
+                    break;
+                }
                 return (
-                  <div key={index} className="flex items-center space-x-2">
-                    <Icon className="text-blue-500" />
-                    <span>{facility}</span>
+                  <div
+                    key={index}
+                    className="bg-blue-50 p-4 rounded-lg shadow-md text-center hover:shadow-lg transition"
+                  >
+                    <p className="text-gray-700 font-medium capitalize">
+                      {facility}
+                    </p>
                   </div>
                 );
               })}
             </div>
           </div>
-
           <div className="mt-6">
             {!isVisitBooked ? (
               <button
@@ -229,3 +301,5 @@ const IndividualProperty = () => {
 };
 
 export default IndividualProperty;
+
+

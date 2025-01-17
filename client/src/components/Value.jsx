@@ -10,7 +10,7 @@ import "react-accessible-accordion/dist/fancy-example.css";
 import data from "../utils/accordian";
 import { IoIosArrowDown } from "react-icons/io";
 
-const Value = () => {
+const MyValue = () => {
   return (
     <section className="flex lg:flex-row  flex-col justify-between px-6 lg:px-[12%] gap-8 mt-20">
       {/* Left side */}
@@ -63,4 +63,4 @@ const Value = () => {
   );
 };
 
-export default Value;
+export default MyValue;

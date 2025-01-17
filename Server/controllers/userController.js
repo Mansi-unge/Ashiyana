@@ -230,3 +230,48 @@ export const checkBookingStatus = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
+
+// Add Property to Favorites
+export const addToFavorites = async (req, res) => {
+  const userId = req.user.userId;
+  const { residencyId } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.favResidenciesID.includes(residencyId)) {
+      return res.status(400).json({ message: "Property already in favorites" });
+    }
+
+    user.favResidenciesID.push(residencyId);
+    await user.save();
+
+    res.status(200).json({ message: "Property added to favorites" });
+  } catch (error) {
+    console.error("Error adding to favorites:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Remove Property from Favorites
+export const removeFromFavorites = async (req, res) => {
+  const userId = req.user.userId;
+  const { residencyId } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.favResidenciesID = user.favResidenciesID.filter(
+      (id) => id.toString() !== residencyId
+    );
+    await user.save();
+
+    res.status(200).json({ message: "Property removed from favorites" });
+  } catch (error) {
+    console.error("Error removing from favorites:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

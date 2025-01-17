@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropertyCard from "./PropertyCard";
 import shuffle from "lodash/shuffle";
+import ResidencySkelton from "../skeletons/ResidencySkelton";
 
 const Recidencies = () => {
   const [properties, setProperties] = useState([]);
@@ -32,9 +33,17 @@ const Recidencies = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
+      <section className="flex flex-col flex-wrap justify-center mt-8">
+        <div className="text-center mb-6">
+          <h1 className="text-orange-400 font-bold text-3xl">Best Choices</h1>
+          <h1 className="text-blue-900 font-bold text-5xl">Popular Residencies</h1>
+        </div>
+        <div className="flex flex-wrap justify-start mx-[5%] gap-4">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <ResidencySkelton key={index} />
+          ))}
+        </div>
+      </section>
     );
   }
 
@@ -57,11 +66,10 @@ const Recidencies = () => {
         <h1 className="text-blue-900 font-bold text-5xl">Popular Residencies</h1>
       </div>
       {/* Property Cards */}
-      <div className="flex flex-wrap justify-center mx-[5%] gap-4">
-      {randomizedProperties.map((card) => (
-  <PropertyCard card={card} key={card._id} />
-))}
-
+      <div className="flex flex-wrap justify-start mx-[5%] gap-4">
+        {randomizedProperties.map((card) => (
+          <PropertyCard card={card} key={card._id} />
+        ))}
       </div>
     </section>
   );

@@ -70,3 +70,30 @@ export const getResidency = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+export const searchResidencies = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query) {
+      return res.status(400).json({ message: 'Search query is required.' });
+    }
+
+    // Perform a case-insensitive search
+    const regex = new RegExp(query, 'i');
+    const residencies = await Residency.find({
+      $or: [
+        { title: regex },
+        { description: regex },
+        { city: regex },
+        { country: regex },
+        { address: regex },
+      ],
+    });
+
+    res.status(200).json(residencies);
+  } catch (error) {
+    console.error('Error fetching residencies:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
