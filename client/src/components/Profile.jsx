@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Menu, Divider, Text, Badge, Group } from "@mantine/core";
-import { FaUser, FaCog } from "react-icons/fa";
 import axios from "axios";
 import ProfileImageUpload from "./ProfileImageUpload";
 
@@ -22,7 +21,7 @@ const Profile = ({ handleLogout }) => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setUser(response.data);
+        setUser(response.data || {});
         setBookedVisits(response.data.bookedVisits || []);
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -89,8 +88,10 @@ const Profile = ({ handleLogout }) => {
             size={40}
           />
           <div>
-            <Text weight={500}>{user.name}</Text>
-            <Text size="sm" color="gray">{user.email}</Text>
+            <Text weight={500}>{user.name || "No name"}</Text>
+            <Text size="sm" color="gray">
+              {user.email || "No email"}
+            </Text>
           </div>
           {user.isVerified && (
             <Badge color="green" size="xs" radius="sm" variant="filled">
@@ -103,10 +104,18 @@ const Profile = ({ handleLogout }) => {
         <Menu.Label>Booked Visits</Menu.Label>
         {bookedVisits.length > 0 ? (
           bookedVisits.map((visit) => (
-            <Menu.Item key={visit.id}>
-              <Text size="sm">Property ID: {visit.id}</Text>
+            <Menu.Item key={visit._id || visit.id || Math.random()}>
+              <Text weight={500} size="sm">
+                {visit.id?.title || "Unknown Property"}
+              </Text>
               <Text size="xs" color="gray">
-                Date: {new Date(visit.date).toLocaleDateString()}
+                Property ID: {visit.id?._id || "Unknown ID"}
+              </Text>
+              <Text size="xs" color="gray">
+                Date:{" "}
+                {visit.date
+                  ? new Date(visit.date).toLocaleDateString()
+                  : "Invalid Date"}
               </Text>
             </Menu.Item>
           ))
@@ -117,9 +126,13 @@ const Profile = ({ handleLogout }) => {
         <Divider />
         <Menu.Label>Settings</Menu.Label>
         <Menu.Item onClick={handleRemoveImage}>Remove Profile Image</Menu.Item>
-        <Menu.Item onClick={() => setIsUploading(true)}>Upload Profile Image</Menu.Item>
+        <Menu.Item onClick={() => setIsUploading(true)}>
+          Upload Profile Image
+        </Menu.Item>
         <Divider />
-        <Menu.Item color="red" onClick={handleLogout}>Logout</Menu.Item>
+        <Menu.Item color="red" onClick={handleLogout}>
+          Logout
+        </Menu.Item>
       </Menu.Dropdown>
 
       {isUploading && (

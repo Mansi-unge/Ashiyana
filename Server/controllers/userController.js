@@ -76,24 +76,33 @@ export const getUserDetails = async (req, res) => {
   try {
     console.log("Fetching user details...");
 
-
-  // The `authenticate` middleware ensures the token is valid and adds `req.user`
-  const user = await User.findById(req.user.userId);
+    // The `authenticate` middleware ensures the token is valid and adds `req.user`
+    const user = await User.findById(req.user.userId)
+    .populate({
+      path: 'bookedVisits.id',
+      select: 'title _id', // Fetch only title and _id
+    })
+      .populate('favResidenciesID')          // Populate residency details in favResidenciesID
+      .populate('ownedResidencies');         // Populate residency details in ownedResidencies
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    console.log("User fetched from database:", user); 
+    console.log("User fetched from database:", user);
 
     res.status(200).json({
       name: user.name,
       email: user.email,
       image: user.image || "/default-avatar.png", // Default image if not provided
+      bookedVisits: user.bookedVisits, // Include bookedVisits in the response
+      favResidenciesID: user.favResidenciesID, // Include favorite residencies
+      ownedResidencies: user.ownedResidencies, // Include owned residencies
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 // Controller to update profile image
 export const updateProfileImage = asyncHandler(async (req, res) => {
