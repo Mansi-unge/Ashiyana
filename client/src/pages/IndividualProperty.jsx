@@ -188,7 +188,7 @@ const IndividualProperty = () => {
 
   return (
     <div className="p-6 bg-white shadow-2xl rounded-xl">
-       <ToastContainer progress={false} />
+       <ToastContainer  />
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left Section */}
         <div className="lg:w-1/2 flex flex-col">
