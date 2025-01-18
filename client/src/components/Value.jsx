@@ -7,7 +7,7 @@ import {
   AccordionItemPanel,
 } from "react-accessible-accordion";
 import "react-accessible-accordion/dist/fancy-example.css";
-import data from "../utils/accordian";
+import data from "../utils/Accordian.jsx";
 import { IoIosArrowDown } from "react-icons/io";
 import ValueSkeleton from "../skeletons/ValueSkeleton";
 
