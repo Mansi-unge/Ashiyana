@@ -26,7 +26,7 @@ const AddProperty = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/api/residencies/create", property);
+      const response = await axios.post("https://ashiyana.onrender.com//api/residencies/create", property);
       console.log("Property added successfully", response.data);
       alert("Property added successfully!");
       setProperty({

@@ -40,7 +40,7 @@ const ProfileImageUpload = ({ onImageUpload, onCancel }) => {
     try {
       setIsUploading(true);
       const response = await axios.post(
-        "http://localhost:8000/api/upload-profile-image",
+        "https://ashiyana.onrender.com/api/upload-profile-image",
         { image },
         { headers: { Authorization: `Bearer ${token}` } }
       );

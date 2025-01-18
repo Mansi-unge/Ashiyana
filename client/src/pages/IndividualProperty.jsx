@@ -7,6 +7,8 @@ import { HiArrowLeft } from "react-icons/hi";
 import { IoHeartCircleOutline } from "react-icons/io5";
 import IndividualSkeleton from "../skeletons/IndividualSkeleton";
 import Failed from "../skeletons/failed";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const IndividualProperty = () => {
   const { id } = useParams();
@@ -35,7 +37,9 @@ const IndividualProperty = () => {
 
     const fetchPropertyDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/residencies/${id}`);
+        const response = await axios.get(
+          `https://ashiyana.onrender.com/api/residencies/${id}`
+        );
         setProperty(response.data);
       } catch (err) {
         setError("Failed to fetch property details");
@@ -43,11 +47,15 @@ const IndividualProperty = () => {
         setIsLoading(false);
       }
     };
+
     const checkBookingStatus = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/users/check-booking/${id}`, {
-          headers: { Authorization: `Bearer ${storedToken}` },
-        });
+        const response = await axios.get(
+          `https://ashiyana.onrender.com/api/users/check-booking/${id}`,
+          {
+            headers: { Authorization: `Bearer ${storedToken}` },
+          }
+        );
         if (response.data.isBooked) {
           setIsVisitBooked(true);
           setBookedDate(response.data.visitDate);
@@ -62,15 +70,19 @@ const IndividualProperty = () => {
     if (storedToken) {
       checkBookingStatus();
     }
+
     const fetchUserFavorites = async () => {
       try {
         const storedToken = localStorage.getItem("authToken");
         if (!storedToken) return;
-  
-        const response = await axios.get("http://localhost:8000/api/profile", {
-          headers: { Authorization: `Bearer ${storedToken}` },
-        });
-  
+
+        const response = await axios.get(
+          "https://ashiyana.onrender.com/api/profile",
+          {
+            headers: { Authorization: `Bearer ${storedToken}` },
+          }
+        );
+
         const favoriteProperties = response.data.favResidenciesID || [];
         const isFavorited = favoriteProperties.some((fav) => fav._id === id);
         setIsFavorite(isFavorited);
@@ -78,54 +90,56 @@ const IndividualProperty = () => {
         console.error("Error fetching favorites:", error);
       }
     };
-  
+
     fetchUserFavorites();
-    
   }, [id]);
 
-const toggleFavorite = async () => {
-  try {
-    const storedToken = localStorage.getItem("authToken");
-    if (!storedToken) return alert("Please log in to use this feature.");
+  const toggleFavorite = async () => {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      if (!storedToken) return toast.error("Please log in to use this feature.");
 
-    const url = isFavorite
-      ? "http://localhost:8000/api/users/remove-favorite"
-      : "http://localhost:8000/api/users/add-favorite";
+      const url = isFavorite
+        ? "https://ashiyana.onrender.com/api/users/remove-favorite"
+        : "https://ashiyana.onrender.com/api/users/add-favorite";
 
-    await axios.post(
-      url,
-      { residencyId: id },
-      { headers: { Authorization: `Bearer ${storedToken}` } }
-    );
+      await axios.post(
+        url,
+        { residencyId: id },
+        { headers: { Authorization: `Bearer ${storedToken}` } }
+      );
 
-    setIsFavorite(!isFavorite);
-    alert(`Property ${isFavorite ? "removed from" : "added to"} favorites.`);
-  } catch (error) {
-    console.error("Error updating favorites:", error);
-    alert("Error updating favorites.");
-  }
-};
-
+      setIsFavorite(!isFavorite);
+      toast.success(
+        `Property ${isFavorite ? "removed from" : "added to"} favorites.`
+      );
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+      toast.error("Error updating favorites.");
+    }
+  };
 
   const handleBookVisit = async () => {
     if (!visitDate) {
-      alert("Please select a date for your visit.");
+      toast.warn("Please select a date for your visit.");
       return;
     }
     try {
       if (!token) throw new Error("User not logged in.");
       await axios.post(
-        "http://localhost:8000/api/users/book",
+        "https://ashiyana.onrender.com/api/users/book",
         { residencyId: id, visitDate },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert("Visit booked successfully");
+      toast.success("Visit booked successfully");
       setIsVisitBooked(true);
       setBookedDate(visitDate);
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error booking visit:", error.response?.data || error.message);
-      alert(`Error booking visit: ${error.response?.data?.message || error.message}`);
+      toast.error(
+        `Error booking visit: ${error.response?.data?.message || error.message}`
+      );
     }
   };
 
@@ -133,37 +147,48 @@ const toggleFavorite = async () => {
     try {
       if (!token) throw new Error("User not logged in.");
       await axios.post(
-        "http://localhost:8000/api/users/cancel-visit",
+        "https://ashiyana.onrender.com/api/users/cancel-visit",
         { residencyId: id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert("Visit cancelled successfully");
+      toast.success("Visit cancelled successfully");
       setIsVisitBooked(false);
       setBookedDate("");
     } catch (error) {
       console.error("Error cancelling visit:", error.response?.data || error.message);
-      alert(`Error cancelling visit: ${error.response?.data?.message || error.message}`);
+      toast.error(
+        `Error cancelling visit: ${error.response?.data?.message || error.message}`
+      );
     }
   };
 
   if (isLoading) {
-    return <div className="text-2xl text-gray-500">
-      <IndividualSkeleton/>
-    </div>;
+    return (
+      <div className="text-2xl text-gray-500">
+        <IndividualSkeleton />
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-red-500 text-xl"><Failed/></div>;
+    return (
+      <div className="text-red-500 text-xl">
+        <Failed />
+      </div>
+    );
   }
 
   if (!property) {
-    return <div>
-      <Failed/>
-    </div>
+    return (
+      <div>
+        <Failed />
+      </div>
+    );
   }
 
   return (
     <div className="p-6 bg-white shadow-2xl rounded-xl">
+       <ToastContainer progress={false} />
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left Section */}
         <div className="lg:w-1/2 flex flex-col">
@@ -236,7 +261,7 @@ const toggleFavorite = async () => {
             ) : (
               <div className="flex gap-4">
                 <button className="bg-green-500 text-white px-6 py-3 rounded-lg">
-                  Visit on {bookedDate}
+                  Your Visit for this property is booked on  {bookedDate}
                 </button>
                 <button
                   onClick={handleCancelVisit}

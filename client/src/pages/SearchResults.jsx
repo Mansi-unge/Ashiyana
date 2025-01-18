@@ -14,7 +14,7 @@ const SearchResults = () => {
         <Searchbar />
       </div>
 
-      <h2 className="text-2xl font-semibold mb-4 text-center">Results Related to your Search</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-center">Related Results to your Search</h2>
       {searchResults.length === 0 ? (
         <p className="text-center">No properties found.</p>
       ) : (

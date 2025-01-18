@@ -18,7 +18,7 @@ const Profile = ({ handleLogout }) => {
           return;
         }
 
-        const response = await axios.get("http://localhost:8000/api/profile", {
+        const response = await axios.get("https://ashiyana.onrender.com/api/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -52,7 +52,7 @@ const Profile = ({ handleLogout }) => {
         return;
       }
 
-      await axios.delete("http://localhost:8000/api/remove-profile-image", {
+      await axios.delete("https://ashiyana.onrender.com/api/remove-profile-image", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

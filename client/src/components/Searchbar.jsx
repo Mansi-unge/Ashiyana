@@ -14,7 +14,7 @@ const Searchbar = ({ isSticky }) => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:8000/api/residencies/search`, {
+      const response = await axios.get(`https://ashiyana.onrender.com/api/residencies/search`, {
         params: { query },
       });
 

@@ -14,7 +14,7 @@ const PropertyCard = ({ card = {} }) => {
         const storedToken = localStorage.getItem("authToken");
         if (!storedToken) return;
 
-        const response = await axios.get("http://localhost:8000/api/profile", {
+        const response = await axios.get("https://ashiyana.onrender.com/api/profile", {
           headers: { Authorization: `Bearer ${storedToken}` },
         });
 
@@ -36,8 +36,8 @@ const PropertyCard = ({ card = {} }) => {
       if (!storedToken) return alert("Please log in to use this feature.");
 
       const url = isWishlisted
-        ? "http://localhost:8000/api/users/remove-favorite"
-        : "http://localhost:8000/api/users/add-favorite";
+        ? "https://ashiyana.onrender.com/api/users/remove-favorite"
+        : "https://ashiyana.onrender.com/api/users/add-favorite";
 
       await axios.post(
         url,

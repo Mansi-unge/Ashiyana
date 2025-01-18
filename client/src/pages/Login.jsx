@@ -37,7 +37,7 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
     try {
       if (isLogin) {
         // Login logic
-        const response = await axios.post("http://localhost:8000/api/login", { email, password });
+        const response = await axios.post("https://ashiyana.onrender.com/api/login", { email, password });
         setSuccessMessage(response.data.message);
         setErrorMessage("");
         setIsLoggedIn(true);
@@ -47,7 +47,7 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
         closeLoginPage();
       } else {
         // Registration logic
-        const response = await axios.post("http://localhost:8000/api/register", { email, password, name: userName }); // Include name in request
+        const response = await axios.post("https://ashiyana.onrender.com/api/register", { email, password, name: userName }); // Include name in request
         setSuccessMessage(response.data.message);
         setErrorMessage("");
         setIsLogin(true);
