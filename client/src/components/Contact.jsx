@@ -20,14 +20,29 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Send the form data using EmailJS
+  
+    // Send the form data using EmailJS (original message)
     emailjs
       .sendForm('service_a4tm9eo', 'template_doiplfo', e.target, 'Fr5RcLOopCW0GOMc0')
       .then(
         (result) => {
           console.log('Message sent successfully', result.text);
           toast.success('Message sent successfully!');
+  
+          // Send Auto-Reply Email to User
+          const userEmail = formData.email;
+  
+          // Auto-reply template for the user
+          emailjs
+            .send('service_a4tm9eo', 'template_vbhsw8g', { to_email: userEmail }, 'Fr5RcLOopCW0GOMc0')
+            .then(
+              (result) => {
+                console.log('Auto-reply sent successfully', result.text);
+              },
+              (error) => {
+                console.log('Error sending auto-reply', error.text);
+              }
+            );
         },
         (error) => {
           console.log('Error sending message', error.text);
@@ -35,6 +50,7 @@ const Contact = () => {
         }
       );
   };
+  
 
   return (
     <section className="pb-10">
