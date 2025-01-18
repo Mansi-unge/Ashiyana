@@ -174,16 +174,16 @@ const toggleFavorite = async () => {
               className="w-full h-[400px] object-cover rounded-xl"
             />
             <div
-              className="absolute top-4 right-4 cursor-pointer"
+              className="absolute top-4 right-4 cursor-pointer bg-slate-50 bg-opacity-60 rounded-lg p-1"
               onClick={toggleFavorite}
             >
               <IoHeartCircleOutline
                 className={`text-4xl ${
-                  isFavorite ? "text-red-600 scale-110" : "text-gray-300"
+                  isFavorite ? "text-red-600 scale-110" : "text-gray-700"
                 } transition-transform`}
               />
             </div>
-            <div className="absolute bottom-5 left-5 text-white">
+            <div className="absolute bottom-0 left-0  bg-slate-100 rounded-lg py-1 bg-opacity-80 px-4">
               <h1 className="text-4xl font-bold">{property.title}</h1>
               <p className="text-2xl font-semibold text-green-500">
                 &#8377;{property.price}
@@ -192,9 +192,6 @@ const toggleFavorite = async () => {
           </div>
           <div className="mt-6 flex-1 space-y-6">
           <div className="p-6 bg-gray-50 rounded-xl shadow-lg">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                Description
-              </h2>
               <p className="text-gray-700 leading-relaxed">
                 {property.description || "No description available."}
               </p>
@@ -211,39 +208,23 @@ const toggleFavorite = async () => {
 
            {/* Facilities */}
            <div className="mt-6 flex-1">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              Facilities
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-              {(property.facilities || []).map((facility, index) => {
-                let Icon = null;
-                switch (facility.toLowerCase()) {
-                  case "bedroom":
-                    Icon = FaBed;
-                    break;
-                  case "bathroom":
-                    Icon = FaBath;
-                    break;
-                  case "parking":
-                    Icon = FaCar;
-                    break;
-                  default:
-                    Icon = FaMapMarkerAlt; // Default icon
-                    break;
-                }
-                return (
-                  <div
-                    key={index}
-                    className="bg-blue-50 p-4 rounded-lg shadow-md text-center hover:shadow-lg transition"
-                  >
-                    <p className="text-gray-700 font-medium capitalize">
-                      {facility}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+  <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+    Facilities
+  </h2>
+  <div className="grid grid-cols-2 gap-4">
+    {(property.facilities || []).map((facility, index) => (
+      <div
+        key={index}
+        className="bg-blue-50 p-4 rounded-lg shadow-md text-center hover:shadow-lg transition"
+      >
+        <p className="text-gray-700 font-medium capitalize">
+          {facility}
+        </p>
+      </div>
+    ))}
+  </div>
+</div>
+
           <div className="mt-6">
             {!isVisitBooked ? (
               <button

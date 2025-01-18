@@ -8,7 +8,6 @@ const Website = () => {
     <>
     <Hero></Hero>
    <Recidencies></Recidencies>
-   <Value></Value>
    <Contact></Contact>
     </>
   )

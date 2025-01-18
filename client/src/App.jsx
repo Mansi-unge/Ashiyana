@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import SearchResults from "./pages/SearchResults";
+import MyValue from "./components/Value";
 function App() {
   // Create QueryClient instance
   const queryClient = new QueryClient();
@@ -48,7 +49,9 @@ function App() {
                   <Route path=":id" element={<IndividualProperty />} />
                 </Route>
                 <Route path="/add-property" element={<AddProperty />} />
-                <Route path="/login" element={<Login />} /> {/* Add the Login route */}
+                <Route path="/values" element={<MyValue />} />  
+                <Route path="/login" element={<Login />} /> 
+                {/* Add the Login route */}
               </Route>
             </Routes>
           </Suspense>

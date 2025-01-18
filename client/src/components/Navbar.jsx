@@ -29,10 +29,11 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+    localStorage.clear();  // Clears all local storage data
     setIsLoggedIn(false);
     setIsProfileMenuOpen(false);
   };
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -92,6 +93,13 @@ const Navbar = () => {
           >
             Add Properties
           </NavLink>
+          <NavLink
+  to="/values"
+  className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}
+>
+  Values
+</NavLink>
+
           <a
             href="mailto:mansiunge842@gmail.com"
             className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}

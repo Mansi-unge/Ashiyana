@@ -40,10 +40,10 @@ const Searchbar = ({ isSticky }) => {
   };
 
   return (
-    <div className={`relative w-full sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] shadow-lg flex items-center px-3 py-2 rounded-full transition-all duration-300 ${isSticky ? "bg-white border border-gray-300" : "bg-gray-100"}`}>
+    <div className={`relative w-full sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] shadow-lg flex items-center px-3 py-2 rounded-full transition-all duration-300  ${isSticky ? "bg-white border border-gray-300" : "bg-gray-100"}`}>
       <input
         type="search"
-        className="border-none outline-none flex-grow text-sm md:text-base p-3 rounded-l-full bg-transparent placeholder-gray-500 focus:ring-2 focus:ring-blue-500"
+        className="border-none outline-none flex-grow text-sm md:text-base p-3 rounded-l-full bg-transparent placeholder-gray-500 "
         placeholder="Search for properties..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}

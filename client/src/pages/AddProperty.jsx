@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import AddPropertySkeleton from "../skeletons/AddPropertySkeleton";
 
 const AddProperty = () => {
   const [property, setProperty] = useState({
@@ -14,6 +15,8 @@ const AddProperty = () => {
     userEmail: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProperty({ ...property, [name]: value });
@@ -21,6 +24,7 @@ const AddProperty = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post("http://localhost:8000/api/residencies/create", property);
       console.log("Property added successfully", response.data);
@@ -39,8 +43,14 @@ const AddProperty = () => {
     } catch (error) {
       console.error("Error adding property", error);
       alert("Failed to add property. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return <AddPropertySkeleton />;
+  }
 
   return (
     <div className="max-w-screen-md mx-auto p-4">

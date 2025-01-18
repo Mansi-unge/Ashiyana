@@ -75,7 +75,7 @@ const PropertyCard = ({ card = {} }) => {
           )}
         </div>
       </div>
-      <div className="absolute top-3 left-3 bg-gradient-to-r from-green-400 to-blue-500 text-white px-3 py-1 text-sm rounded-full shadow-md">
+      <div className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-3 py-1 text-sm rounded-full shadow-md">
         ₹{card.price || "N/A"}
       </div>
       <h2 className="text-lg font-bold text-gray-800 mt-2">
@@ -92,7 +92,7 @@ const PropertyCard = ({ card = {} }) => {
         })}
       </p>
       <button
-        className="mt-3 py-2 px-4 bg-gradient-to-r from-blue-500 to-green-400 text-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform"
+        className="mt-3 py-2 px-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform"
       >
         View Details
       </button>

@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  
   "scripts": {
     "dev": "vite",
     "start": "vite",
@@ -17,7 +16,9 @@
     "@mantine/hooks": "^7.15.2",
     "@mantine/modals": "^7.15.2",
     "@mantine/notifications": "^7.15.2",
+    "animate.css": "^4.1.1",
     "axios": "^1.7.9",
+    "emailjs-com": "^3.2.0",
     "esri-leaflet-geocoder": "^3.1.5",
     "express-session": "^1.18.1",
     "leaflet": "^1.9.4",
@@ -29,7 +30,8 @@
     "react-leaflet": "^5.0.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.28.1",
-    "react-toastify": "^11.0.2"
+    "react-toastify": "^11.0.2",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
