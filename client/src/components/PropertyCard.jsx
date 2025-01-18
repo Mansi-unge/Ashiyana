@@ -3,6 +3,8 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import truncate from "lodash/truncate";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PropertyCard = ({ card = {} }) => {
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ const PropertyCard = ({ card = {} }) => {
     e.stopPropagation();
     try {
       const storedToken = localStorage.getItem("authToken");
-      if (!storedToken) return alert("Please log in to use this feature.");
+      if (!storedToken) return toast.error("Please log in to use this feature.");
 
       const url = isWishlisted
         ? "https://ashiyana.onrender.com/api/users/remove-favorite"
@@ -46,10 +48,10 @@ const PropertyCard = ({ card = {} }) => {
       );
 
       setIsWishlisted(!isWishlisted);
-      alert(`Property ${isWishlisted ? "removed from" : "added to"} favorites.`);
+      toast.success(`Property ${isWishlisted ? "removed from" : "added to"} favorites.`);
     } catch (error) {
       console.error("Error updating favorites:", error);
-      alert("Error updating favorites.");
+      toast.error("Error updating favorites.");
     }
   };
 
