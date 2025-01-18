@@ -33,7 +33,6 @@ const Navbar = () => {
     setIsLoggedIn(false);
     setIsProfileMenuOpen(false);
   };
-  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -94,11 +93,11 @@ const Navbar = () => {
             Add Properties
           </NavLink>
           <NavLink
-  to="/values"
-  className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}
->
-  Values
-</NavLink>
+            to="/values"
+            className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}
+          >
+            Values
+          </NavLink>
 
           <a
             href="mailto:mansiunge842@gmail.com"
@@ -120,48 +119,63 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="md:hidden">
+        {/* Mobile Menu and Profile Icon Wrapper */}
+        <div className="md:hidden flex items-center space-x-4">
           <button
             onClick={toggleMobileMenu}
             className={`text-3xl ${isScrolled ? "text-white" : "text-black"}`}
           >
             &#9776;
           </button>
+          
+          {isLoggedIn ? (
+            <div ref={profileMenuRef}>
+              <Profile handleLogout={handleLogout} />  {/* Show Profile component */}
+            </div>
+          ) : (
+            <button
+              onClick={handleLoginClick}
+              className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}
+            >
+            </button>
+          )}
         </div>
       </div>
 
+      {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <div
-          className={`md:hidden text-white p-4 space-y-4 flex flex-col ${isScrolled ? "bg-[#1a2d62]" : "bg-white"}`}
-        >
+        <div className="md:hidden absolute top-16 left-0 w-full bg-white shadow-md p-4">
           <NavLink
             to="/properties"
+            className="block py-2 text-xl font-semibold"
             onClick={closeMobileMenu}
-            className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}
           >
             Properties
           </NavLink>
           <NavLink
             to="/add-property"
+            className="block py-2 text-xl font-semibold"
             onClick={closeMobileMenu}
-            className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}
           >
             Add Properties
           </NavLink>
+          <NavLink
+            to="/values"
+            className="block py-2 text-xl font-semibold"
+            onClick={closeMobileMenu}
+          >
+            Values
+          </NavLink>
           <a
             href="mailto:mansiunge842@gmail.com"
+            className="block py-2 text-xl font-semibold"
             onClick={closeMobileMenu}
-            className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}
           >
             Contact Us
           </a>
           {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="text-red-500 hover:underline font-semibold text-xl"
-            >
-              Logout
-            </button>
+            <div ref={profileMenuRef}>
+            </div>
           ) : (
             <button
               onClick={handleLoginClick}
@@ -173,6 +187,7 @@ const Navbar = () => {
         </div>
       )}
 
+      {/* Login Page Modal */}
       {isLoginPageOpen && <Login closeLoginPage={closeLoginPage} setIsLoggedIn={setIsLoggedIn} />}
     </nav>
   );

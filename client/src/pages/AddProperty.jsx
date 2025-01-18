@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 import AddPropertySkeleton from "../skeletons/AddPropertySkeleton";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddProperty = () => {
   const [property, setProperty] = useState({
@@ -28,7 +30,7 @@ const AddProperty = () => {
     try {
       const response = await axios.post("https://ashiyana.onrender.com/api/residencies/create", property);
       console.log("Property added successfully", response.data);
-      alert("Property added successfully!");
+      toast.success("Property added successfully!");
       setProperty({
         title: "",
         description: "",
@@ -42,7 +44,7 @@ const AddProperty = () => {
       });
     } catch (error) {
       console.error("Error adding property", error);
-      alert("Failed to add property. Please try again.");
+      toast.error("Failed to add property. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -141,6 +143,8 @@ const AddProperty = () => {
           Add Property
         </button>
       </form>
+
+      <ToastContainer />
     </div>
   );
 };
