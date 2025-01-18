@@ -51,7 +51,7 @@ const Searchbar = ({ isSticky }) => {
         onBlur={handleBlur}
       />
       <button
-        className="bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold px-5 py-2 rounded-full hover:from-blue-700 hover:to-blue-900 transition-transform transform hover:scale-105"
+        className="bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold px-5 py-2 rounded-full hover:from-blue-700 hover:to-blue-900 transition-transform transform hover:scale-105 me-2"
         onClick={handleSearch}
       >
         Search
