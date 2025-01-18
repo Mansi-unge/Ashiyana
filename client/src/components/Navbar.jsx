@@ -99,6 +99,12 @@ const Navbar = () => {
 >
   Values
 </NavLink>
+<NavLink
+  to="/values"
+  className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}
+>
+  Values
+</NavLink>
 
           <a
             href="mailto:mansiunge842@gmail.com"
