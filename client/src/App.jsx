@@ -15,6 +15,8 @@ import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import SearchResults from "./pages/SearchResults";
 import MyValue from "./components/Value";
+import DreamHomes from "./pages/DreamHomes";
+import MyProperties from "./pages/MyProperties";
 function App() {
   // Create QueryClient instance
   const queryClient = new QueryClient();
@@ -51,6 +53,8 @@ function App() {
                 <Route path="/add-property" element={<AddProperty />} />
                 <Route path="/values" element={<MyValue />} />  
                 <Route path="/login" element={<Login />} /> 
+                <Route path="/DreamHomes" element={<DreamHomes/>} /> 
+                <Route path="/MyProperties" element={<MyProperties/>} /> 
                 {/* Add the Login route */}
               </Route>
             </Routes>

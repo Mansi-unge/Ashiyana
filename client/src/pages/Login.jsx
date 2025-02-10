@@ -63,20 +63,19 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center overflow-y-auto">
-      <div className="absolute inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm"></div>
 
-      <div className="relative w-full max-w-2xl p-12 bg-gradient-to-r from-[#1a2d62] to-[#3b4e78] rounded-lg shadow-lg transform transition duration-300 hover:scale-105 z-10">
+      <div className="relative w-full max-w-2xl p-12 bg-gradient-to-r from-[#1a2d62] to-[#3b4e78] rounded-lg shadow-lg">
         <button
           className="absolute top-4 right-4 text-white"
           onClick={closeLoginPage}
         >
           X
         </button>
-        <div className="flex justify-center p-4 mb-8">
+        <div className="flex justify-center  ">
           <img src="/footer logo.png" alt="Logo" />
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form  onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="text-sm font-medium text-white">
               Email Address
@@ -85,7 +84,7 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
               type="email"
               id="email"
               name="email"
-              className="mt-2 block w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className=" block w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -102,7 +101,7 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
                 type="text"
                 id="userName"
                 name="userName"
-                className="mt-2 block w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className=" block w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Enter your name"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
@@ -120,7 +119,7 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
                 type={passwordVisible ? "text" : "password"}
                 id="password"
                 name="password"
-                className="mt-2 block w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className=" block w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -149,7 +148,7 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
                   type={confirmPasswordVisible ? "text" : "password"}
                   id="confirmPassword"
                   name="confirmPassword"
-                  className="mt-2 block w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className=" block w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   placeholder="Confirm your password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -173,7 +172,7 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-3 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg"
+              className="w-full px-4 py-3 mt-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg"
             >
               {isLogin ? "Login" : "Sign Up"}
             </button>

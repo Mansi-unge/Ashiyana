@@ -6,8 +6,8 @@ import ProfileImageUpload from "./ProfileImageUpload";
 const Profile = ({ handleLogout }) => {
   const [user, setUser] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [bookedVisits, setBookedVisits] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  const [bookedVisitsCount, setBookedVisitsCount] = useState(0);
+  const [favoritesCount, setFavoritesCount] = useState(0);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -23,8 +23,8 @@ const Profile = ({ handleLogout }) => {
         });
 
         setUser(response.data || {});
-        setBookedVisits(response.data.bookedVisits || []);
-        setFavorites(response.data.favResidenciesID || []);
+        setBookedVisitsCount(response.data.bookedVisits?.length || 0);
+        setFavoritesCount(response.data.favResidenciesID?.length || 0);
       } catch (error) {
         console.error("Error fetching user details:", error);
       }
@@ -109,46 +109,15 @@ const Profile = ({ handleLogout }) => {
           )}
         </Group>
         <Divider />
-<Menu.Label>Favorites</Menu.Label>
-{favorites.length > 0 ? (
-  favorites.map((fav) => (
-    <Menu.Item key={fav._id || Math.random()}>
-      <Text weight={500} size="sm">
-        {fav.title || "Unknown Property"}
-      </Text>
-      <Text size="xs" color="gray">
-        Property ID: {fav._id || "Unknown ID"}
-      </Text>
-    </Menu.Item>
-  ))
-) : (
-  <Menu.Item disabled>No favorite properties</Menu.Item>
-)}
 
+        {/* Favorites Count */}
+        <Menu.Label>Favorites</Menu.Label>
+        <Menu.Item>{favoritesCount} favorite properties</Menu.Item>
 
+        {/* Booked Visits Count */}
         <Divider />
         <Menu.Label>Booked Visits</Menu.Label>
-        {bookedVisits.length > 0 ? (
-          bookedVisits.map((visit) => (
-            <Menu.Item key={visit._id || visit.id || Math.random()}>
-              <Text weight={500} size="sm">
-                {visit.id?.title || "Unknown Property"}
-              </Text>
-              <Text size="xs" color="gray">
-                Property ID: {visit.id?._id || "Unknown ID"}
-              </Text>
-              <Text size="xs" color="gray">
-                Date:{" "}
-                {visit.date
-                  ? new Date(visit.date).toLocaleDateString()
-                  : "Invalid Date"}
-              </Text>
-            </Menu.Item>
-          ))
-        ) : (
-          <Menu.Item disabled>No visits booked</Menu.Item>
-        )}
-
+        <Menu.Item>{bookedVisitsCount} visits booked</Menu.Item>
 
         <Divider />
         <Menu.Label>Settings</Menu.Label>
