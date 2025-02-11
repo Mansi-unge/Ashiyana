@@ -51,7 +51,7 @@ const DreamHomes = () => {
           weight={600}
           className="flex items-center justify-center font-bold text-2xl  text-red-500 py-2"
         >
-          <MdFavorite className="mr-2 text-red-500" size={2} /> Favorite
+          <MdFavorite className="mr-2 text-red-500" size={28} /> Favorite
           Properties
         </div>
         {favorites.length > 0 ? (
