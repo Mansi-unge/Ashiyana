@@ -10,7 +10,7 @@ const residencySchema = new Schema({
   address: { type: String, required: true },
   city: { type: String, required: true },
   country: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: String, required: true }, // Store Base64 string
   facilities: { type: Schema.Types.Mixed },
   userEmail: { type: String, required: true },
   owner: { type: Schema.Types.ObjectId, ref: 'User' },

@@ -31,4 +31,5 @@ router.get("/check-booking/:propertyId", authenticate, checkBookingStatus);
 router.post('/add-favorite', authenticate, addToFavorites);
 router.post('/remove-favorite', authenticate, removeFromFavorites);
 
+
 export { router as userRoute };

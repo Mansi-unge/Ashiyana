@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Text, Card, Badge, Divider } from "@mantine/core";
+import { AiOutlineHeart } from "react-icons/ai";
+import { MdEventAvailable, MdFavorite } from "react-icons/md";
+import { Card, Badge, Text, Divider, Button, Image } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 const DreamHomes = () => {
   const [bookedVisits, setBookedVisits] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        if (!token) {
-          console.error("No token found in localStorage");
-          return;
-        }
+        if (!token) return console.error("No token found in localStorage");
 
         const response = await axios.get("https://ashiyana.onrender.com/api/profile", {
           headers: { Authorization: `Bearer ${token}` },
@@ -30,43 +31,120 @@ const DreamHomes = () => {
   }, []);
 
   return (
-    <div className="p-4">
-      <Text size="xl" weight={700}>
-        Dream Homes
-      </Text>
-      
-      <Divider my="sm" />
-      
-      <Text size="lg" weight={600}>
-        Favorite Properties
-      </Text>
-      {favorites.length > 0 ? (
-        favorites.map((fav) => (
-          <Card key={fav._id || Math.random()} shadow="sm" p="lg" mt="sm">
-            <Text weight={500}>{fav.title || "Unknown Property"}</Text>
-            <Text size="sm" color="gray">Property ID: {fav._id || "Unknown ID"}</Text>
-          </Card>
-        ))
-      ) : (
-        <Text size="sm" color="gray">No favorite properties</Text>
-      )}
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div weight={700} className="text-gray-800 mb-3 text-xl
+       flex flex-col text-center">
+        <span className="font-bold">🏡 Welcome to Your Dream Homes!</span>
+        <span>
+          Here, you can find all the properties you've marked as favorites and
+          the ones you've booked visits for. Easily keep track of your dream
+          homes and manage your visits effortlessly!
+        </span>
+      </div>
 
-      <Divider my="sm" />
-      
-      <Text size="lg" weight={600}>
-        Booked Visits
-      </Text>
-      {bookedVisits.length > 0 ? (
-        bookedVisits.map((visit) => (
-          <Card key={visit._id || visit.id || Math.random()} shadow="sm" p="lg" mt="sm">
-            <Text weight={500}>{visit.id?.title || "Unknown Property"}</Text>
-            <Text size="sm" color="gray">Property ID: {visit.id?._id || "Unknown ID"}</Text>
-            <Text size="sm" color="gray">Date: {visit.date ? new Date(visit.date).toLocaleDateString() : "Invalid Date"}</Text>
-          </Card>
-        ))
-      ) : (
-        <Text size="sm" color="gray">No visits booked</Text>
-      )}
+      <Divider my="md" />
+
+      {/* Favorite Properties */}
+      <div className="mb-6">
+        <div
+          size="lg"
+          weight={600}
+          className="flex items-center justify-center font-bold text-2xl  text-red-500 py-2"
+        >
+          <MdFavorite className="mr-2 text-red-500" size={2} /> Favorite
+          Properties
+        </div>
+        {favorites.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+            {favorites.map((fav) => (
+              <Card
+                key={fav._id}
+                shadow="sm"
+                p="md"
+                className="hover:shadow-lg transition w-72"
+              >
+                <Image
+                  src={fav.image || "https://via.placeholder.com/300"}
+                  height={120}
+                  alt={fav.title || "Property Image"}
+                  className="rounded"
+                />
+                <Text weight={600} className="text-md mt-2">
+                  {fav.title || "Unknown Property"}
+                </Text>
+                <Text size="xs" color="dimmed">
+                  Property ID: {fav._id || "Unknown ID"}
+                </Text>
+                <Button
+                  variant="light"
+                  color="red"
+                  fullWidth
+                  mt="md"
+                  leftIcon={<AiOutlineHeart />}
+                >
+                  Remove from Favorites
+                </Button>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Text size="sm" color="gray" className="mt-2">
+            No favorite properties
+          </Text>
+        )}
+      </div>
+
+      <Divider my="md" />
+
+      {/* Booked Visits */}
+      <div>
+        <div
+          size="lg"
+          weight={600}
+          className="flex justify-center items-center font-bold text-2xl  text-green-500 py-2"
+        >
+          <MdEventAvailable className="mr-2 text-green-500" size={28} />Booked
+          Visits
+        </div>
+        {bookedVisits.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+            {bookedVisits.map((visit) => (
+              <Card
+                key={visit._id}
+                shadow="sm"
+                p="md"
+                className="hover:shadow-lg transition w-72"
+              >
+                <Image
+                  src={visit.id?.image || "https://via.placeholder.com/300"}
+                  height={120}
+                  alt={visit.id?.title || "Property Image"}
+                  className="rounded"
+                />
+                <Text weight={600} className="text-md mt-2">
+                  {visit.id?.title || "Unknown Property"}
+                </Text>
+                <Text size="xs" color="dimmed">
+                  Property ID: {visit.id?._id || "Unknown ID"}
+                </Text>
+                <Text size="xs" color="dimmed">
+                  Date:{" "}
+                  {visit.date
+                    ? new Date(visit.date).toLocaleDateString()
+                    : "Invalid Date"}
+                </Text>
+                <Badge color="green" variant="light" mt="md">
+                  Confirmed
+                </Badge>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Text size="sm" color="gray" className="mt-2">
+            No visits booked
+          </Text>
+        )}
+      </div>
     </div>
   );
 };
