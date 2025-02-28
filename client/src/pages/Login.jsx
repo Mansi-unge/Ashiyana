@@ -20,34 +20,33 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!email || !password) {
       setErrorMessage("Email and Password are required.");
       return;
     }
-
+  
     if (!isLogin && password !== confirmPassword) {
       setErrorMessage("Passwords do not match.");
       return;
     }
-
+  
     try {
       if (isLogin) {
-        // Login logic
-        const response = await axios.post("https://ashiyana.onrender.com/api/login", { email, password });
+        // Login logic (Fix route)
+        const response = await axios.post("https://ashiyana.onrender.com/api/users/login", { email, password });
         setSuccessMessage(response.data.message);
         setErrorMessage("");
         setIsLoggedIn(true);
-        localStorage.setItem("isLoggedIn", "true"); // Save login status to localStorage
-        localStorage.setItem("userEmail", email); // Store email in localStorage
-        localStorage.setItem("authToken", response.data.token); // Store token in localStorage
+        localStorage.setItem("isLoggedIn", "true"); 
+        localStorage.setItem("userEmail", email); 
+        localStorage.setItem("authToken", response.data.token); 
         closeLoginPage();
       } else {
-        // Registration logic
-        const response = await axios.post("https://ashiyana.onrender.com/api/register", { email, password, name: userName }); // Include name in request
+        // Registration logic (Fix route)
+        const response = await axios.post("https://ashiyana.onrender.com/api/users/register", { email, password, name: userName });
         setSuccessMessage(response.data.message);
         setErrorMessage("");
         setIsLogin(true);
@@ -60,6 +59,7 @@ function Login({ closeLoginPage, setIsLoggedIn }) {
       }
     }
   };
+  
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center overflow-y-auto">

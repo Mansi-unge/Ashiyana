@@ -13,12 +13,14 @@ const residencySchema = new Schema({
   image: { type: String, required: true }, // Store Base64 string
   facilities: { type: Schema.Types.Mixed },
   userEmail: { type: String, required: true },
-  owner: { type: Schema.Types.ObjectId, ref: 'User' },
+  owner: { type: Schema.Types.ObjectId, ref: "User" }, // Owner reference
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 }, {
   timestamps: true,
 });
+
+
 
 // Ensure unique address and userEmail combination
 residencySchema.index({ address: 1, userEmail: 1 }, { unique: true });

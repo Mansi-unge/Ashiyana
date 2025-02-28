@@ -16,7 +16,7 @@ const PropertyCard = ({ card = {} }) => {
         const storedToken = localStorage.getItem("authToken");
         if (!storedToken) return;
 
-        const response = await axios.get("https://ashiyana.onrender.com/api/profile", {
+        const response = await axios.get("https://ashiyana.onrender.com/api/users/profile", {
           headers: { Authorization: `Bearer ${storedToken}` },
         });
 

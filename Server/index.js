@@ -9,8 +9,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Import Routes
-import userRoute from './routes/userRoutes.js';
-import residencyRoute from './routes/residencyRoute.js';
+import {userRoute} from './routes/userRoutes.js';
+import { residencyRoute } from './routes/residencyRoute.js';
+
 
 // Load environment variables
 dotenv.config();

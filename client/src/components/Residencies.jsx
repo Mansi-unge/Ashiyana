@@ -56,7 +56,7 @@ const Recidencies = () => {
   }
 
   // Shuffle and slice data to display only 8 properties
-  const randomizedProperties = shuffle(properties).slice(0, 8);
+  const randomizedProperties = shuffle(properties).slice(0, 4);
 
   return (
     <section className="flex flex-col flex-wrap justify-center mt-8">

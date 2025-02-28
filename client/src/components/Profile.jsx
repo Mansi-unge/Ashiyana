@@ -8,6 +8,7 @@ const Profile = ({ handleLogout }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [bookedVisitsCount, setBookedVisitsCount] = useState(0);
   const [favoritesCount, setFavoritesCount] = useState(0);
+  const [ownedProperties, setOwnedProperties] = useState([]);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -18,13 +19,14 @@ const Profile = ({ handleLogout }) => {
           return;
         }
 
-        const response = await axios.get("https://ashiyana.onrender.com/api/profile", {
+        const response = await axios.get("https://ashiyana.onrender.com/api/users/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         setUser(response.data || {});
         setBookedVisitsCount(response.data.bookedVisits?.length || 0);
         setFavoritesCount(response.data.favResidenciesID?.length || 0);
+        setOwnedProperties(response.data.ownedResidencies || []);
       } catch (error) {
         console.error("Error fetching user details:", error);
       }
@@ -67,12 +69,7 @@ const Profile = ({ handleLogout }) => {
 
   if (!user) {
     return (
-      <Avatar
-        src="/default-avatar.png"
-        alt="User"
-        radius="xl"
-        size={40}
-      />
+      <Avatar src="/default-avatar.png" alt="User" radius="xl" size={40} />
     );
   }
 
@@ -98,9 +95,7 @@ const Profile = ({ handleLogout }) => {
           />
           <div>
             <Text weight={500}>{user.name || "No name"}</Text>
-            <Text size="sm" color="gray">
-              {user.email || "No email"}
-            </Text>
+            <Text size="sm" color="gray">{user.email || "No email"}</Text>
           </div>
           {user.isVerified && (
             <Badge color="green" size="xs" radius="sm" variant="filled">
@@ -118,6 +113,20 @@ const Profile = ({ handleLogout }) => {
         <Divider />
         <Menu.Label>Booked Visits</Menu.Label>
         <Menu.Item>{bookedVisitsCount} visits booked</Menu.Item>
+
+        {/* Owned Properties */}
+        <Divider />
+        <Menu.Label>Owned Properties</Menu.Label>
+        {ownedProperties.length > 0 ? (
+          ownedProperties.map((property) => (
+            <Menu.Item key={property._id}>
+              <Text weight={500}>{property.title}</Text>
+              <Text size="xs" color="gray">{property.city}, {property.country}</Text>
+            </Menu.Item>
+          ))
+        ) : (
+          <Menu.Item>No owned properties</Menu.Item>
+        )}
 
         <Divider />
         <Menu.Label>Settings</Menu.Label>
