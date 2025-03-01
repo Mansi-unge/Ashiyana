@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const Searchbar = ({ isSticky }) => {
   const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
@@ -15,7 +14,7 @@ const Searchbar = ({ isSticky }) => {
     }
 
     try {
-      const response = await axios.get("https://ashiyana.onrender.com/api/residencies/search", {
+      const response = await axios.get(`https://ashiyana.onrender.com/api/residencies/search`, {
         params: { query },
       });
 
@@ -24,31 +23,15 @@ const Searchbar = ({ isSticky }) => {
       } else {
         console.error("Unexpected response status:", response.status);
       }
+
     } catch (error) {
-      console.error("Error fetching search results:", error.response?.data || error.message);
-    }
-  };
-
-  // Trigger search when Enter is pressed
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
-
-  // Live search suggestions
-  const fetchSearchSuggestions = async (input) => {
-    try {
-      const response = await axios.get("https://ashiyana.onrender.com/api/residencies/search", {
-        params: { query: input },
-      });
-
-      if (response.status === 200) {
-        setSearchResults(response.data);
-        setShowDropdown(true);
+      if (error.response) {
+        console.error("Error fetching search results:", error.response.data);
+      } else if (error.request) {
+        console.error("No response from server:", error.request);
+      } else {
+        console.error("Error:", error.message);
       }
-    } catch (error) {
-      console.error("Error fetching search suggestions:", error.response?.data || error.message);
     }
   };
 
@@ -57,20 +40,14 @@ const Searchbar = ({ isSticky }) => {
   };
 
   return (
-    <div
-      className={`relative w-full sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] shadow-lg flex items-center px-3 py-2 rounded-full transition-all duration-300  
-      ${isSticky ? "bg-white border border-gray-300" : "bg-gray-100"}`}
-    >
+    <div className={`relative w-full sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] shadow-lg flex items-center px-3 py-2 rounded-full transition-all duration-300  ${isSticky ? "bg-white border border-gray-300" : "bg-gray-100"}`}>
       <input
         type="search"
-        className="border-none outline-none flex-grow text-sm md:text-base p-3 rounded-l-full bg-transparent placeholder-gray-500"
-        placeholder="Search properties by location, price, facilities..."
+        className="border-none outline-none flex-grow text-sm md:text-base p-3 rounded-l-full bg-transparent placeholder-gray-500 "
+        placeholder="Search for properties..."
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          fetchSearchSuggestions(e.target.value);
-        }}
-        onKeyDown={handleKeyDown} // Search on Enter key press
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={handleSearch}
         onBlur={handleBlur}
       />
       <button
@@ -86,14 +63,9 @@ const Searchbar = ({ isSticky }) => {
             <div
               key={residency._id}
               className="px-4 py-2 hover:bg-blue-50 cursor-pointer transition-colors duration-200"
-              onClick={() => {
-                navigate("/property-details", { state: { residency } });
-              }}
             >
               <h4 className="font-semibold text-gray-800">{residency.title}</h4>
-              <p className="text-sm text-gray-500">
-                {residency.city}, {residency.country}
-              </p>
+              <p className="text-sm text-gray-500">{residency.city}, {residency.country}</p>
             </div>
           ))}
         </div>
