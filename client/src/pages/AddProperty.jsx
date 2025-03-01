@@ -33,10 +33,13 @@ const AddProperty = () => {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token) {
-      toast.error("⚠️ You need to login to add a property!");
-      navigate("/"); // Redirects to the home page
+      toast.error("⚠️ You need to login to add a property!", { autoClose: 2000 });
+      setTimeout(() => {
+        navigate("/"); // Redirects to the home page after toast is shown
+      }, 2000); // 2 seconds delay
     }
   }, [navigate]);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
