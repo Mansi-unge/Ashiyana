@@ -26,38 +26,26 @@ Ensure you have the following installed:
 
 ### Clone the Repository
 ```sh
-git clone 
+git clone https://github.com/Mansi-unge/Ashiyana.git
 ```
 
 ### Install Dependencies
 #### Backend
 ```sh
-cd backend
+cd server
 npm install
 ```
 #### Frontend
 ```sh
-cd frontend
+cd client
 npm install
 ```
 
 ### Configure Environment Variables
-Create a `.env` file in both `backend/` and `frontend/` directories and configure the following:
+Create a `.env` file in both `server/` and `client/` directories and configure the following:
 #### Backend (`backend/.env`)
 ```
 MONGO_URI=your_mongodb_connection_string
-AUTH0_DOMAIN=your_auth0_domain
-AUTH0_CLIENT_ID=your_auth0_client_id
-TWILIO_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-EMAIL_USER=your_email@example.com
-EMAIL_PASS=your_email_password
-```
-#### Frontend (`frontend/.env`)
-```
-REACT_APP_AUTH0_DOMAIN=your_auth0_domain
-REACT_APP_AUTH0_CLIENT_ID=your_auth0_client_id
-REACT_APP_MAPBOX_TOKEN=your_mapbox_token
 ```
 
 ### Start the Application
@@ -89,11 +77,9 @@ Contributions are welcome! To contribute:
 4. Push to the branch
 5. Create a pull request
 
-## License 📜
-This project is licensed under the **MIT License**.
 
 ## Contact 📧
-For queries or collaborations, reach out at **your.email@example.com** or connect on [LinkedIn](https://linkedin.com/in/yourprofile).
+For queries or collaborations, reach out at **mansiunge@gmail.com** or connect on [LinkedIn](https://linkedin.com/in/yourprofile).
 
 ---
 💙 Built with passion for seamless real estate experiences!
