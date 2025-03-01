@@ -29,15 +29,12 @@ const AddProperty = () => {
 
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token) {
-      toast.error("⚠️ Please log in to add a property.");
-      navigate("/login");
-    } else {
-      setIsAuthenticated(true);
+      toast.error("⚠️ You need to login to add a property!");
+      navigate("/"); // Redirects to the home page
     }
   }, [navigate]);
 
@@ -68,10 +65,7 @@ const AddProperty = () => {
     try {
       await axios.post(
         "https://ashiyana.onrender.com/api/residencies/create",
-        property,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
-        }
+        property
       );
       toast.success("🏡 Property added successfully!");
       setProperty({
@@ -97,9 +91,9 @@ const AddProperty = () => {
     return <AddPropertySkeleton />;
   }
 
-  return isAuthenticated ? (
+  return (
     <div className="flex flex-col justify-center items-center py-4">
-      <h2 className="text-3xl font-bold text-blue-700 flex  gap-4">
+      <h2 className="text-3xl font-bold text-blue-700 flex gap-4">
         <FaHome className="text-blue-600" /> Add Your Property
       </h2>
 
@@ -108,16 +102,37 @@ const AddProperty = () => {
           Fill in the details to list your property and attract potential buyers.
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4 ">
+          <div className="grid grid-cols-2 gap-4">
             {[
-              { name: "title", icon: <FaHome />, placeholder: "Property Title" },
-              { name: "price", icon: <FaDollarSign />, placeholder: "Price", type: "number" },
-              { name: "address", icon: <FaMapMarkerAlt />, placeholder: "Address" },
+              {
+                name: "title",
+                icon: <FaHome />,
+                placeholder: "Property Title",
+              },
+              {
+                name: "price",
+                icon: <FaDollarSign />,
+                placeholder: "Price",
+                type: "number",
+              },
+              {
+                name: "address",
+                icon: <FaMapMarkerAlt />,
+                placeholder: "Address",
+              },
               { name: "city", icon: <FaCity />, placeholder: "City" },
               { name: "country", placeholder: "Country" },
-              { name: "userEmail", icon: <FaEnvelope />, placeholder: "Your Email", type: "email" },
+              {
+                name: "userEmail",
+                icon: <FaEnvelope />,
+                placeholder: "Your Email",
+                type: "email",
+              },
             ].map(({ name, icon, placeholder, type = "text" }) => (
-              <div key={name} className="flex items-center bg-gray-100 p-3 rounded-lg shadow-inner">
+              <div
+                key={name}
+                className="flex items-center bg-gray-100 p-3 rounded-lg shadow-inner"
+              >
                 {icon && <span className="text-gray-500 mr-3">{icon}</span>}
                 <input
                   type={type}
@@ -184,7 +199,7 @@ const AddProperty = () => {
         <ToastContainer />
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default AddProperty;
