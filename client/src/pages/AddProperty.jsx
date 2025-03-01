@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -13,6 +14,7 @@ import AddPropertySkeleton from "../skeletons/AddPropertySkeleton";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddProperty = () => {
+  const navigate = useNavigate();
   const [property, setProperty] = useState({
     title: "",
     description: "",
@@ -27,6 +29,17 @@ const AddProperty = () => {
 
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      toast.error("⚠️ Please log in to add a property.");
+      navigate("/login");
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -55,7 +68,10 @@ const AddProperty = () => {
     try {
       await axios.post(
         "https://ashiyana.onrender.com/api/residencies/create",
-        property
+        property,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
+        }
       );
       toast.success("🏡 Property added successfully!");
       setProperty({
@@ -81,7 +97,7 @@ const AddProperty = () => {
     return <AddPropertySkeleton />;
   }
 
-  return (
+  return isAuthenticated ? (
     <div className="flex flex-col justify-center items-center py-4">
       <h2 className="text-3xl font-bold text-blue-700 flex  gap-4">
         <FaHome className="text-blue-600" /> Add Your Property
@@ -89,41 +105,19 @@ const AddProperty = () => {
 
       <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6 mt-6">
         <p className="text-gray-500 mb-6">
-          Fill in the details to list your property and attract potential
-          buyers.
+          Fill in the details to list your property and attract potential buyers.
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4 ">
             {[
-              {
-                name: "title",
-                icon: <FaHome />,
-                placeholder: "Property Title",
-              },
-              {
-                name: "price",
-                icon: <FaDollarSign />,
-                placeholder: "Price",
-                type: "number",
-              },
-              {
-                name: "address",
-                icon: <FaMapMarkerAlt />,
-                placeholder: "Address",
-              },
+              { name: "title", icon: <FaHome />, placeholder: "Property Title" },
+              { name: "price", icon: <FaDollarSign />, placeholder: "Price", type: "number" },
+              { name: "address", icon: <FaMapMarkerAlt />, placeholder: "Address" },
               { name: "city", icon: <FaCity />, placeholder: "City" },
               { name: "country", placeholder: "Country" },
-              {
-                name: "userEmail",
-                icon: <FaEnvelope />,
-                placeholder: "Your Email",
-                type: "email",
-              },
+              { name: "userEmail", icon: <FaEnvelope />, placeholder: "Your Email", type: "email" },
             ].map(({ name, icon, placeholder, type = "text" }) => (
-              <div
-                key={name}
-                className="flex items-center bg-gray-100 p-3 rounded-lg shadow-inner"
-              >
+              <div key={name} className="flex items-center bg-gray-100 p-3 rounded-lg shadow-inner">
                 {icon && <span className="text-gray-500 mr-3">{icon}</span>}
                 <input
                   type={type}
@@ -190,7 +184,7 @@ const AddProperty = () => {
         <ToastContainer />
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default AddProperty;
