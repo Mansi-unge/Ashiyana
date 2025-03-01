@@ -33,13 +33,15 @@ const AddProperty = () => {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token) {
-      toast.error("⚠️ You need to login to add a property!", { autoClose: 2000 });
+      navigate("/"); // Redirects first
       setTimeout(() => {
-        navigate("/"); // Redirects to the home page after toast is shown
-      }, 2000); // 2 seconds delay
+        toast.error("⚠️ You need to login to add a property!", {
+          autoClose: 2000,
+          hideProgressBar: true, // Hide progress bar
+        });
+      }, 500); // Small delay to ensure navigation happens first
     }
   }, [navigate]);
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -102,7 +104,8 @@ const AddProperty = () => {
 
       <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6 mt-6">
         <p className="text-gray-500 mb-6">
-          Fill in the details to list your property and attract potential buyers.
+          Fill in the details to list your property and attract potential
+          buyers.
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
@@ -199,7 +202,7 @@ const AddProperty = () => {
           </button>
         </form>
 
-        <ToastContainer />
+        <ToastContainer hideProgressBar />
       </div>
     </div>
   );
