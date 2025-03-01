@@ -79,7 +79,7 @@ Contributions are welcome! To contribute:
 
 
 ## Contact 📧
-For queries or collaborations, reach out at **mansiunge@gmail.com** or connect on [LinkedIn](https://linkedin.com/in/yourprofile).
+For queries or collaborations, reach out at **mansiunge@gmail.com** or connect on [LinkedIn](https://www.linkedin.com/in/mansi-unge-8825ba312).
 
 ---
 💙 Built with passion for seamless real estate experiences!
