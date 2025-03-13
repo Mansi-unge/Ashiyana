@@ -110,6 +110,12 @@ const Navbar = () => {
           >
             Dream Homes
           </NavLink>
+          <NavLink
+            to="/About"
+            className={`${isScrolled ? "text-white" : "text-black"} hover:underline font-semibold text-xl`}
+          >
+            About Us
+          </NavLink>
 
           <a
             href="mailto:mansiunge842@gmail.com"

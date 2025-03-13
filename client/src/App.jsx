@@ -17,6 +17,7 @@ import SearchResults from "./pages/SearchResults";
 import MyValue from "./components/Value";
 import DreamHomes from "./pages/DreamHomes";
 import MyProperties from "./pages/MyProperties";
+import About from "./pages/About";
 function App() {
   // Create QueryClient instance
   const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ function App() {
                 </Route>
                 <Route path="/add-property" element={<AddProperty />} />
                 <Route path="/values" element={<MyValue />} />  
+                <Route path="/About" element={<About />} />
                 <Route path="/login" element={<Login />} /> 
                 <Route path="/DreamHomes" element={<DreamHomes/>} /> 
                 <Route path="/MyProperties" element={<MyProperties/>} /> 
