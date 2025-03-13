@@ -35,7 +35,7 @@ const AddProperty = () => {
     if (!token) {
       navigate("/"); // Redirects first
       setTimeout(() => {
-        toast.error("⚠️ You need to login to add a property!", {
+        toast.error("You need to login to add a property!", {
           autoClose: 2000,
           hideProgressBar: true, // Hide progress bar
         });
