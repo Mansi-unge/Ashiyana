@@ -1,6 +1,9 @@
 import { FaCheckCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-gradient-to-r from-blue-50 to-blue-200 min-h-screen flex flex-col items-center py-16 px-8 md:px-24">
       <div className="max-w-5xl bg-white shadow-2xl rounded-3xl p-12 text-center transform transition duration-500 hover:scale-105">
@@ -19,14 +22,6 @@ const About = () => {
         </div>
 
         <div className="mt-10">
-          <h2 className="text-4xl font-semibold text-gray-800 mb-6">Our Mission</h2>
-          <p className="text-lg text-gray-700 leading-relaxed">
-            We strive to revolutionize the real estate industry by simplifying property discovery, booking, and management
-            with technology. Our goal is to create a stress-free journey for property seekers by providing accurate listings and seamless transactions.
-          </p>
-        </div>
-
-        <div className="mt-10">
           <h2 className="text-4xl font-semibold text-gray-800 mb-6">What We Offer</h2>
           <ul className="text-lg text-gray-700 text-left list-disc list-inside space-y-3">
             <li><span className="font-semibold">Verified Property Listings:</span> Browse genuine properties with high-quality images.</li>
@@ -40,23 +35,27 @@ const About = () => {
         <div className="mt-10">
           <h2 className="text-4xl font-semibold text-gray-800 mb-6">Why Choose Ashiyana?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-lg text-gray-700">
-            <div className="flex items-center space-x-4 bg-gray-50 p-5 rounded-xl shadow-md transition hover:shadow-lg">
-              <FaCheckCircle className="text-blue-600 text-3xl" />
-              <span><span className="font-semibold">Reliable & Transparent:</span> Verified and up-to-date listings.</span>
-            </div>
-            <div className="flex items-center space-x-4 bg-gray-50 p-5 rounded-xl shadow-md transition hover:shadow-lg">
-              <FaCheckCircle className="text-blue-600 text-3xl" />
-              <span><span className="font-semibold">Easy Property Visits:</span> Book visits online effortlessly.</span>
-            </div>
-            <div className="flex items-center space-x-4 bg-gray-50 p-5 rounded-xl shadow-md transition hover:shadow-lg">
-              <FaCheckCircle className="text-blue-600 text-3xl" />
-              <span><span className="font-semibold">Secure Transactions:</span> Safe and trusted property dealings.</span>
-            </div>
-            <div className="flex items-center space-x-4 bg-gray-50 p-5 rounded-xl shadow-md transition hover:shadow-lg">
-              <FaCheckCircle className="text-blue-600 text-3xl" />
-              <span><span className="font-semibold">Customer-Centric Support:</span> Always here to help you.</span>
-            </div>
+            {[
+              { text: "Reliable & Transparent: Verified and up-to-date listings." },
+              { text: "Easy Property Visits: Book visits online effortlessly." },
+              { text: "Secure Transactions: Safe and trusted property dealings." },
+              { text: "Customer-Centric Support: Always here to help you." }
+            ].map((item, index) => (
+              <div key={index} className="flex items-center space-x-4 bg-gray-50 p-5 rounded-xl shadow-md transition hover:shadow-lg">
+                <FaCheckCircle className="text-blue-600 text-3xl" />
+                <span><span className="font-semibold">{item.text.split(":")[0]}:</span> {item.text.split(":")[1]}</span>
+              </div>
+            ))}
           </div>
+        </div>
+
+        <div className="mt-12">
+          <button
+            onClick={() => navigate("/properties")}
+            className="mt-6 px-8 py-4 bg-blue-600 text-white text-xl font-semibold rounded-full shadow-md transition duration-300 hover:bg-blue-700 hover:scale-105"
+          >
+            Get Started →
+          </button>
         </div>
       </div>
     </div>
