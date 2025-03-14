@@ -12,7 +12,9 @@ const Properties = () => {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const response = await fetch("https://ashiyana.onrender.com/api/residencies/allresidencies");
+        const response = await fetch(
+          "https://ashiyana.onrender.com/api/residencies/allresidencies"
+        );
         if (response.ok && response.headers.get("Content-Type").includes("application/json")) {
           const data = await response.json();
           setProperties(data);
@@ -39,19 +41,19 @@ const Properties = () => {
   const shuffledData = shuffle(properties);
 
   return (
-<div className="p-4 flex items-center flex-col gap-4 w-full">
-  <Searchbar />
-  <div className="flex flex-wrap justify-start gap-4 p-6 w-full">
-    {isLoading
-      ? Array.from({ length: 10 }).map((_, index) => (
-          <PropertiesSkeleton key={index} />
-        ))
-      : shuffledData.map((property) => (
-          <PropertyCard key={property._id} card={property} />
-        ))}
-  </div>
-</div>
-
+    <div className="p-4 flex items-center flex-col gap-4 w-full">
+      <Searchbar />
+      {/* Grid layout for property cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6 w-full">
+        {isLoading
+          ? Array.from({ length: 10 }).map((_, index) => (
+              <PropertiesSkeleton key={index} />
+            ))
+          : shuffledData.map((property) => (
+              <PropertyCard key={property._id} card={property} />
+            ))}
+      </div>
+    </div>
   );
 };
 
