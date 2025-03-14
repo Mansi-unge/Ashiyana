@@ -1,5 +1,6 @@
 import { FaCheckCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const About = () => {
   return (
@@ -87,7 +88,8 @@ const About = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >
-        Explore Properties
+        <Link   to="/properties" >
+        Explore Properties</Link>
       </motion.button>
     </div>
   );
