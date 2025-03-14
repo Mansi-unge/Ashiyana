@@ -57,7 +57,7 @@ const PropertyCard = ({ card = {} }) => {
 
   return (
     <div
-      className="w-full sm:w-72 md:w-80 lg:w-96 xl:w-[300px] relative rounded-xl gap-3 m-auto transition-transform ease-in-out max-w-xs flex flex-col p-5 hover:cursor-pointer bg-white shadow-md hover:shadow-xl border border-gray-200"
+      className="w-full sm:w-72 md:w-80 lg:w-96 xl:w-[300px] relative rounded-xl gap-3 mt-4 m-auto transition-transform ease-in-out max-w-xs flex flex-col p-5 hover:cursor-pointer bg-white shadow-md hover:shadow-xl border border-gray-200"
       onClick={() => card._id && navigate(`/properties/${card._id}`)}
     >
       <div className="w-full h-48 relative rounded-xl overflow-hidden">

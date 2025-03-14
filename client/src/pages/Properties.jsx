@@ -39,18 +39,19 @@ const Properties = () => {
   const shuffledData = shuffle(properties);
 
   return (
-    <div className="p-4 flex items-center flex-col gap-4 w-full">
-      <Searchbar />
-      <div className="flex flex-wrap justify-start gap-2 p-6 w-full">
-        {isLoading
-          ? Array.from({ length: 10 }).map((_, index) => (
-              <PropertiesSkeleton key={index} /> // Use the separated skeleton component
-            ))
-          : shuffledData.map((property) => (
-              <PropertyCard key={property._id} card={property} />
-            ))}
-      </div>
-    </div>
+<div className="p-4 flex items-center flex-col gap-4 w-full">
+  <Searchbar />
+  <div className="flex flex-wrap justify-start gap-4 p-6 w-full">
+    {isLoading
+      ? Array.from({ length: 10 }).map((_, index) => (
+          <PropertiesSkeleton key={index} />
+        ))
+      : shuffledData.map((property) => (
+          <PropertyCard key={property._id} card={property} />
+        ))}
+  </div>
+</div>
+
   );
 };
 
