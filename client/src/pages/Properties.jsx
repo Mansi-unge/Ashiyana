@@ -33,7 +33,7 @@ const Properties = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen text-red-500">
-        <p>{error}</p>
+        <p>SOMETHING WENT WRONG TRY AFTER SOME TIME </p>
       </div>
     );
   }
