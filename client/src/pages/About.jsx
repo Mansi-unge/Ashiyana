@@ -15,6 +15,11 @@ const About = () => {
           Welcome to <span className="text-blue-600 font-semibold">Ashiyana</span>, where luxury meets comfort. Discover premium properties tailored to your needs and lifestyle.
         </p>
         
+        {/* Featured Image */}
+        <div className="mb-8">
+          <img src="https://source.unsplash.com/800x400/?luxury-house" alt="Luxury Home" className="rounded-lg shadow-lg w-full" />
+        </div>
+
         <div className="mt-8">
           <h2 className="text-4xl font-semibold text-gray-800 mb-6">Who We Are</h2>
           <p className="text-lg text-gray-700 leading-relaxed">
@@ -42,6 +47,15 @@ const About = () => {
                 <span className="font-semibold">{item.text}</span>
               </motion.div>
             ))}
+          </div>
+        </div>
+
+        {/* Testimonials */}
+        <div className="mt-10">
+          <h2 className="text-4xl font-semibold text-gray-800 mb-6">What Our Clients Say</h2>
+          <div className="bg-gray-100 p-6 rounded-xl shadow-md">
+            <p className="text-lg italic text-gray-700">"Ashiyana helped me find the perfect home effortlessly! The team was supportive throughout the process."</p>
+            <p className="mt-4 font-semibold text-blue-600">- Rahul Mehta</p>
           </div>
         </div>
 
